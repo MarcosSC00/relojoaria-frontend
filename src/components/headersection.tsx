@@ -1,0 +1,31 @@
+import { Search } from "lucide-react";
+import type { ReactNode } from "react";
+
+interface HeaderSectionProps {
+  title: string;
+  children: ReactNode;
+}
+
+export function HeaderSection({ title, children }: HeaderSectionProps) {
+  return (
+    <div
+      className="w-full flex p-2 border border-gray-200 justify-between rounded-md
+    bg-white items-center"
+    >
+      <div className="flex items-center gap-2">
+        <h2 className="text-gray-800 font-bold text-xl">{title}</h2>
+        {children}
+      </div>
+      <div className="flex items-center border border-gray-200 rounded-sm  bg-gray-100">
+        <input
+          type="text"
+          placeholder="pesquisar..."
+          className="outline-none px-1 text-gray-700"
+        />
+        <button className="p-2 bg-[#031D3B] rounded-e-sm">
+          <Search size={16} className="text-gray-50" />
+        </button>
+      </div>
+    </div>
+  );
+}
