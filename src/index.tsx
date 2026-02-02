@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { router } from "./routes.ts";
+import { router } from "./routes.tsx";
 import "./index.css";
-import { RouterProvider } from "react-router";
+import { RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./hooks/AuthProvider.tsx";
 import { Toaster } from "sonner";
 import "./api/interceptors.ts";

@@ -1,4 +1,4 @@
-import { clearToken, getToken } from "../utils/token";
+import { clearAuth, getToken } from "../utils/token";
 import { api } from "./api";
 
 api.interceptors.request.use((config) => {
@@ -13,8 +13,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      clearToken();
-      window.location.href = "auth/login";
+      clearAuth();
+      window.location.href = "/";
     }
     return Promise.reject(error);
   }

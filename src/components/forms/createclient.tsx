@@ -2,6 +2,8 @@ import { CheckCircle } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
+import type { Client } from "../../types/client";
+import { createClient } from "../../services/clientservice";
 
 interface CreateClientInupts {
   name: string;
@@ -9,12 +11,10 @@ interface CreateClientInupts {
 }
 interface CreateClientProps {
   children: ReactNode;
-  loadedClient?: {
-    name: string;
-    phone: string;
-  };
+  loadedClient?: Client
   onLoading?: (loading: boolean) => void;
   openModal?: () => void;
+  onSuccess?: ()=> Promise<void>
 }
 
 export function CreateClient({
@@ -22,6 +22,7 @@ export function CreateClient({
   loadedClient,
   onLoading,
   openModal,
+  onSuccess
 }: CreateClientProps) {
   const {
     register,
@@ -35,23 +36,24 @@ export function CreateClient({
   });
   const [error, setError] = useState<string | null>(null);
 
-  const onSubmit: SubmitHandler<CreateClientInupts> = async (data) => {
+  const onSubmit: SubmitHandler<CreateClientInupts> = async ({name, phone}: CreateClientInupts) => {
     try {
       onLoading?.(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(data);
+      const result = await createClient(name, phone);
+      console.log(result);
       toast(
         <div className="flex gap-2 items-center">
           <CheckCircle className="h-5 w-5 text-[#031D3B]" />
           <div className="flex flex-col">
             <span className="font-medium">Cliente cadastrado!</span>
             <span className="text-xs text-gray-500">
-              Nome: Marcos Silva Chaves
+              Nome: {result.name}
             </span>
           </div>
         </div>
       );
       openModal?.();
+      onSuccess?.();
     } catch (errorSubmit) {
       setError("erro ao cadastrar cliente");
       toast.error("Erro ao cadastrar o cliente.");

@@ -1,7 +1,7 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { LoginService } from "../services/loginservice";
 import { useAuth } from "../hooks/UseAuth";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 interface LoginSchema {
   name: string;
@@ -15,11 +15,11 @@ export function Login() {
   } = useForm<LoginSchema>();
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loadingLogin, setLoadingLogin] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
   const loginSubmit: SubmitHandler<LoginSchema> = async (data) => {
-    setLoading(true);
+    setLoadingLogin(true);
     try {
       const response = await LoginService(data.name, data.password);
       login(response.token, response.userResponse);
@@ -28,9 +28,10 @@ export function Login() {
       setLoginError("usuário ou senha inválidos.");
       console.error("erro ao realizar login", error);
     } finally {
-      setLoading(false);
+      setLoadingLogin(false);
     }
   };
+
   return (
     <div className="w-full h-screen bg-gray-50 flex self-center justify-center items-center">
       <div
@@ -82,16 +83,16 @@ export function Login() {
             )}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loadingLogin}
               className={`px-4 mb-3 rounded-md font-semibold  text-gray-50
             cursor-pointer transition-colors duration-150 
             ${
-              loading
+              loadingLogin
                 ? "bg-blue-950 text-gray-400"
                 : "bg-blue-800 hover:bg-blue-900 "
             }`}
             >
-              {loading ? "ENTRANDO..." : "ENTRAR"}
+              {loadingLogin ? "ENTRANDO..." : "ENTRAR"}
             </button>
           </form>
         </div>

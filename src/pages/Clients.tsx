@@ -3,11 +3,29 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { CreateClient } from "../components/forms/createclient";
 import { PageWrapper } from "../components/pagewrapper";
 import { Modal } from "../components/modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { Client } from "../types/client";
+import { getClients } from "../services/clientservice";
+import { toast } from "sonner";
 
 export function Clients() {
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [clients, setClients] = useState<Client[]>([]);
+
+  const loadClients = async () => {
+    try{
+      const response = await getClients();
+      setClients(response)
+    }catch(error){
+      console.error(error)
+      toast.error("Erro ao buscar clientes.")
+    }
+  }
+
+  useEffect(() => {
+    loadClients();
+  }, [])
 
   return (
     <PageWrapper
@@ -15,7 +33,7 @@ export function Clients() {
       sessionTitle="Clientes"
       componentsChildren={
         <div className="w-full px-6 py-8">
-          <Table />
+          <Table data={clients ? clients : []}/>
         </div>
       }
     >
@@ -23,6 +41,7 @@ export function Clients() {
         <CreateClient
           onLoading={setIsSubmiting}
           openModal={() => setIsOpen(false)}
+          onSuccess={loadClients}
         >
           <div className="flex justify-end gap-2 mt-5">
             <Dialog.Close

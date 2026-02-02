@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { type Product } from "../../domain/product";
+import { type Product } from "../../types/product";
 import { createProduct } from "../../services/productservice";
 import { toast } from "sonner";
 import { AxiosError } from "axios";

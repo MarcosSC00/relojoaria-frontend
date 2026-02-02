@@ -1,5 +1,5 @@
 import { api } from "../api/api";
-import type { Product } from "../domain/product";
+import type { Product } from "../types/product";
 
 export async function createProduct(
   name: string,

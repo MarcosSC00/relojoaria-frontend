@@ -1,25 +1,39 @@
-import React, { useState } from "react";
-import { type User } from "../domain/user";
+import React, { useEffect, useState } from "react";
+import { type User } from "../types/user";
 import { AuthContext } from "./AuthContext";
-import { setToken, clearToken } from "../utils/token";
+import { setToken, clearAuth, setUser } from "../utils/token";
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
+  const [userAuth, setUserAuth] = useState<User | null>(null);
+  const [loading, setloading] = useState(true)
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("rd:user");
+    if(storedUser){
+      setUserAuth(JSON.parse(storedUser))
+    }
+    setloading(false)
+  }, [])
 
   function login(token: string, user: User) {
     setToken(token);
     setUser(user);
+    setUserAuth(user);
   }
   function logout() {
-    clearToken();
-    setUser(null);
+    clearAuth();
+    setUserAuth(null);
+  }
+  function  hasProfile(profile: string) {
+    return userAuth?.role?.includes(profile) ?? false;
+  
   }
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ userAuth, login, logout, hasProfile, loading }}>
       {children}
     </AuthContext.Provider>
   );
