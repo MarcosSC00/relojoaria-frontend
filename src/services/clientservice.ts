@@ -12,6 +12,14 @@ export async function createClient(
     return response.data;
 }
 
+export async function updateClient(
+    id: number,
+    data: {name:string, phone: string}
+):Promise<Client>{
+    const response = await api.put(`api/clients/${id}`, data)
+    return response.data
+}
+
 export async function getClients():Promise<Client[]>{
     const response = await api.get("api/clients")
     return response.data;

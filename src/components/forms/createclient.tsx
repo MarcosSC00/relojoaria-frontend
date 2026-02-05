@@ -1,20 +1,23 @@
 import { CheckCircle } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import type { Client } from "../../types/client";
-import { createClient } from "../../services/clientservice";
+import { createClient, updateClient } from "../../services/clientservice";
 
 interface CreateClientInupts {
+  id?: number
   name: string;
   phone: string;
 }
+
 interface CreateClientProps {
   children: ReactNode;
   loadedClient?: Client
   onLoading?: (loading: boolean) => void;
   openModal?: () => void;
-  onSuccess?: ()=> Promise<void>
+  onSuccess?: ()=> Promise<void>,
+  isUpdate?: boolean
 }
 
 export function CreateClient({
@@ -22,25 +25,33 @@ export function CreateClient({
   loadedClient,
   onLoading,
   openModal,
-  onSuccess
+  onSuccess,
+  isUpdate
 }: CreateClientProps) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<CreateClientInupts>({
-    defaultValues: {
+  } = useForm<CreateClientInupts>();
+
+  useEffect(() => {
+    reset({
       name: loadedClient?.name,
-      phone: loadedClient?.phone,
-    },
-  });
+      phone: loadedClient?.phone
+    })
+  }, [loadedClient, reset])
   const [error, setError] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<CreateClientInupts> = async ({name, phone}: CreateClientInupts) => {
+    var result;
     try {
       onLoading?.(true);
-      const result = await createClient(name, phone);
-      console.log(result);
+      if(isUpdate && loadedClient){
+        result = await updateClient(loadedClient?.id, {name, phone});
+        openModal?.();
+        onSuccess?.();
+      }else result = await createClient(name, phone);
       toast(
         <div className="flex gap-2 items-center">
           <CheckCircle className="h-5 w-5 text-[#031D3B]" />

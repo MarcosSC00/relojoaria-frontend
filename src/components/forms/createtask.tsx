@@ -1,45 +1,62 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import type { TaskRequest, TaskResponse } from "../../types/task";
+import { createTask } from "../../services/taskservice";
+import { toast } from "sonner";
+import { CheckCircle } from "lucide-react";
 
-interface CreateServiceInputs {
-  client: string;
-  title: string;
-  description: string;
-  type: string;
-  materialUsage: {
-    prodname: string;
-    quantity: number;
-  };
-  addValue: number;
+interface CreateServiceProps {
+  children: ReactNode;
+  loadedTask?: TaskResponse
+  onLoading?: (loading: boolean) => void;
+  openModal?: () => void;
+  onSuccess?: ()=> Promise<void>,
+  isUpdate?: boolean
 }
 
-export function CreateService() {
+export function CreateTask({
+  children,
+  isUpdate,
+  loadedTask,
+  onLoading,
+  onSuccess,
+  openModal
+}: CreateServiceProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateServiceInputs>();
+  } = useForm<TaskRequest>({
+    defaultValues:{status: "TODO"}
+  });
   const [errorService, setErrorService] = useState<string | null>(null);
 
-  const onSubmit: SubmitHandler<CreateServiceInputs> = (data) => {
+  const onSubmit: SubmitHandler<TaskRequest> = async (data: TaskRequest) => {
     try {
-      console.log(data);
+      onLoading?.(true);
+      const result = await createTask(data);
+      toast(
+        <div className="flex gap-2 items-center">
+          <CheckCircle className="h-5 w-5 text-[#031D3B]" />
+          <div className="flex flex-col">
+            <span className="font-medium">Cliente cadastrado!</span>
+            <span className="text-xs text-gray-500">
+              Título: {result.title}
+            </span>
+          </div>
+        </div>
+      );
+      openModal?.();
+      onSuccess?.();
     } catch (error) {
-      setErrorService("erro ao cadastrar cliente");
-      console.error("erro ao cadastrar cliente", error);
+      toast.error("erro ao cadastrar tarefa");
+      console.error("erro ao cadastrar tarefa", error);
+    } finally{
+      onLoading?.(false);
     }
   };
   return (
-    <div
-      className="w-[400px] h-fit bg-white p-4 
-            shadow-md rounded-md mx-auto relative"
-    >
-      <h2
-        className="text-xl font-bold text-center px-2 text-gray-50 bg-[#031D3B]
-          rounded-md w-fit mb-5"
-      >
-        Ordem de serviço
-      </h2>
+    <div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-full overflow-y-auto"
@@ -51,11 +68,11 @@ export function CreateService() {
           type="text"
           id="cliente"
           className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
-          {...register("client", { required: "Informe o cliente." })}
+          {...register("clientId", { required: "Informe o cliente." })}
           placeholder="Informe o cliente"
         />
-        {errors.client && (
-          <span className="text-xs text-red-500">{errors.client.message}</span>
+        {errors.clientId && (
+          <span className="text-xs text-red-500">{errors.clientId.message}</span>
         )}
         <label htmlFor="title" className="font-semibold text-sm mt-4">
           Title:
@@ -67,7 +84,7 @@ export function CreateService() {
           {...register("title", { required: "Informe um título" })}
         />
         {errors.title && (
-          <span className="text-xs text-red-500">{errors.client?.message}</span>
+          <span className="text-xs text-red-500">{errors.title?.message}</span>
         )}
         <label htmlFor="description" className="font-semibold text-sm mt-4">
           Descrição:
@@ -83,9 +100,7 @@ export function CreateService() {
             {errors.description.message}
           </span>
         )}
-        {errorService && (
-          <span className="text-sm text-red-500">{errorService}</span>
-        )}
+        
         <div className="grid grid-cols-2 grid-rows-2 mt-4 gap-4">
           <fieldset>
             <legend className="font-semibold text-sm">Tipo:</legend>
@@ -93,7 +108,7 @@ export function CreateService() {
               <input
                 type="radio"
                 id="repair"
-                value="reparo"
+                value="REPAIR"
                 {...register("type")}
               />
               <label htmlFor="repair">Reparo</label>
@@ -102,7 +117,7 @@ export function CreateService() {
               <input
                 type="radio"
                 id="sale"
-                value="venda"
+                value="SALE"
                 {...register("type")}
               />
               <label htmlFor="sale">Venda</label>
@@ -126,7 +141,7 @@ export function CreateService() {
             </label>
             <select
               id="product"
-              {...register("materialUsage.prodname")}
+              {...register("items.name")}
               className="outline-none border border-gray-200 rounded-sm text-gray-600 p-1 text-sm"
             >
               <option value="ouro">Ouro</option>
@@ -143,27 +158,14 @@ export function CreateService() {
               id="quantity"
               placeholder="0.00"
               className="outline-none border border-gray-200 rounded-sm p-1 text-sm"
-              {...register("materialUsage.quantity")}
+              {...register("items.quantity")}
             />
           </div>
         </div>
-        <div className="flex justify-end gap-2 mt-5">
-          <button
-            className="p-1 border border-gray-300 rounded-md text-[#031D3B] font-semibold
-               hover:bg-gray-200 transition-colors duration-150
-               hover:cursor-pointer text-sm"
-          >
-            CANCELAR
-          </button>
-          <button
-            type="submit"
-            className="p-1 bg-[#031D3B] border border-[#031D3B] rounded-md text-gray-50 font-semibold
-               hover:bg-[#020F1F] transition-colors duration-150
-               hover:cursor-pointer text-sm"
-          >
-            SALVAR
-          </button>
-        </div>
+        {errorService && (
+          <span className="text-sm text-red-500">{errorService}</span>
+        )}
+        {children}
       </form>
     </div>
   );

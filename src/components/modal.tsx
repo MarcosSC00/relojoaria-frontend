@@ -40,10 +40,11 @@ export function Modal({
           <div className="flex items-center justify-between mb-5">
             <Dialog.Title
               className="text-md font-bold text-center px-2 text-gray-50 bg-[#031D3B]
-      rounded-md w-fit"
+              rounded-md w-fit"
             >
               {tiltle}
             </Dialog.Title>
+            <Dialog.Description />
             <Dialog.Close>
               <X className="text-gray-400" />
             </Dialog.Close>

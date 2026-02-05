@@ -5,7 +5,7 @@ import { PageWrapper } from "../components/pagewrapper";
 import { Modal } from "../components/modal";
 import { useEffect, useState } from "react";
 import type { Client } from "../types/client";
-import { getClients } from "../services/clientservice";
+import { deleteClient, getClients } from "../services/clientservice";
 import { toast } from "sonner";
 
 export function Clients() {
@@ -23,6 +23,17 @@ export function Clients() {
     }
   }
 
+  const handleDeleteClient = async (id: number) => {
+    try {
+      await deleteClient(id);
+      setClients((prev) => prev.filter(c => c.id !== id));
+      toast.success("Cliente deletado com sucesso!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao deletar cliente.");
+    }
+  };
+
   useEffect(() => {
     loadClients();
   }, [])
@@ -33,7 +44,11 @@ export function Clients() {
       sessionTitle="Clientes"
       componentsChildren={
         <div className="w-full px-6 py-8">
-          <Table data={clients ? clients : []}/>
+          <Table 
+            data={clients ?? []} 
+            onDelete={handleDeleteClient} 
+            onReaload={loadClients}
+            headElements={["Id", "NOME", "TELEFONE", "DATA DE CRIAÇÃO", "AÇÕES"]} />
         </div>
       }
     >

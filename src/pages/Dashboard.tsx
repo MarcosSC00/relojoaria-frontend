@@ -1,7 +1,7 @@
 import { Award, DollarSign, Target, Users } from "lucide-react";
 import { Card } from "../components/ui/Card";
 import { Outlet } from "react-router";
-import { useAuth } from "../hooks/UseAuth";
+import { useAuth } from "../hooks/useAuth";
 import { Header } from "../components/header";
 import { Navigation } from "../components/navigation";
 
@@ -16,11 +16,11 @@ const formatPercentage = (value: number) => {
   return `${value.toFixed(1)}%`;
 };
 export function Dashboard() {
-  const { user } = useAuth();
+  const { userAuth } = useAuth();
   return (
     <div className="min-h-screen">
       {/* Header Section */}
-      <Header title="Dashboard" username={user?.username} />
+      <Header title="Dashboard" username={userAuth?.username} />
       <Navigation />
       <div className="px-6 py-8 space-y-8">
         {/* Key Performance Indicators */}

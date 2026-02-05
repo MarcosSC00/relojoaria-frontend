@@ -44,6 +44,19 @@ export function Navigation() {
                 PRODUTOS
             </NavLink>
           </li>
+          <li>
+            <NavLink 
+              to="/services"
+              className={({isActive}) => `cursor-pointer transition-colors hover:text-gray-600
+              ${
+                  isActive
+                  ? "border-b-2 border-gray-600 text-gray-600"
+                  : ""
+              }`}
+            >
+                SERVIÇOS
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </div>
