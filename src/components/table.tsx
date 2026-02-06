@@ -8,16 +8,17 @@ import { Modal } from "./modal";
 import { CreateClient } from "./forms/createclient";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
-import { formatDate } from "../utils/dateFormater";
+import type { TableColumn } from "../types/tablecolumn";
 
 interface TableProps{
   data: any;
   onDelete: (id: number) => void | Promise<void>;
   onReaload: () => Promise<void>;
   headElements: string[];
+  columns: TableColumn<any>[];
 }
 
-export function Table({data, onDelete, onReaload, headElements}: TableProps) {
+export function Table({data, onDelete, onReaload, headElements, columns}: TableProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedEntity, setSelectedEntity] = useState<any | null>(null);
 
@@ -40,10 +41,9 @@ export function Table({data, onDelete, onReaload, headElements}: TableProps) {
       <tbody>
         {data.map((d: any) => 
           <tr key={d.id} className="text-center border-b border-gray-300 text-gray-600">
-            <td className="text-left px-4 capitalize">{d.id}</td>
-            <td className="text-center px-4 capitalize">{d.name}</td>
-            <td className="py-3">{d.phone}</td>
-            <td className="py-3">{formatDate(d.createdAt)}</td>
+            {columns.map((col) => (
+              <td className={`px-4 py-3 text-${col.align ?? "center"}`}>{col.render(d)}</td>
+            ))}
             <td>
               <div className="flex gap-2 justify-center">
                 

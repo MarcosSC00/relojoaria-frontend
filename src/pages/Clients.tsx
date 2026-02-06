@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import type { Client } from "../types/client";
 import { deleteClient, getClients } from "../services/clientservice";
 import { toast } from "sonner";
+import type { TableColumn } from "../types/tablecolumn";
+import { formatDate } from "../utils/dateFormater";
 
 export function Clients() {
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
@@ -34,6 +36,22 @@ export function Clients() {
     }
   };
 
+  const columns: TableColumn<Client>[] = [
+    {
+      align: "left",
+      render: (c) => c.id
+    },
+    {
+      render: (c) => c.name
+    },
+    {
+      render: (c) => c.phone
+    },
+    {
+      render: (c) => formatDate(c.createdAt)
+    }
+  ]
+
   useEffect(() => {
     loadClients();
   }, [])
@@ -48,7 +66,8 @@ export function Clients() {
             data={clients ?? []} 
             onDelete={handleDeleteClient} 
             onReaload={loadClients}
-            headElements={["Id", "NOME", "TELEFONE", "DATA DE CRIAÇÃO", "AÇÕES"]} />
+            headElements={["Id", "NOME", "TELEFONE", "DATA DE CRIAÇÃO", "AÇÕES"]}
+            columns={columns}/>
         </div>
       }
     >

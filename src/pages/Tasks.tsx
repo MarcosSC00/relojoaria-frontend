@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Modal } from "../components/modal";
 import { CreateTask } from "../components/forms/createtask";
 import * as Dialog from "@radix-ui/react-dialog"
+import type { TableColumn } from "../types/tablecolumn";
 
 export function Tasks(){
   const [tasks, setTasks] = useState<TaskResponse[]>([])
@@ -34,6 +35,18 @@ export function Tasks(){
     }
   }
 
+  const columns: TableColumn<TaskResponse>[] = [
+    {
+      render: (t) => t.id,
+      align: "left"
+    },
+    { render: (t) => t.title },
+    { render: (t) => t.clientName},
+    {render: (t) => t.createdAt},
+    {render: (t) => t.totalPrice},
+    {render: (t) => t.status},
+  ]
+
   useEffect(() => {
     loadTasks();
   }, [])
@@ -47,9 +60,9 @@ export function Tasks(){
             data={tasks ?? []} 
             onDelete={handleDeleteTask} 
             onReaload={loadTasks}
-            headElements={["TÍTULO", "Cliente", "DATA DE CRIAÇÃO", "Valor", "status",
-              "tipo", "ações"
-            ]} />
+            headElements={["ID", "TÍTULO", "Cliente", "DATA DE CRIAÇÃO", "Valor", "status", "ações"]}
+            columns={columns}
+          />
         </div>
       }
     >

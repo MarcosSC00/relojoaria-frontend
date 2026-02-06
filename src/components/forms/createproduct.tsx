@@ -9,11 +9,13 @@ interface CreateProductProps {
   children: ReactNode;
   onLoading?: (loading: boolean) => void;
   openModal?: () => void;
+  onSuccess?: () => Promise<void>;
 }
 export function CreateProduct({
   children,
   openModal,
   onLoading,
+  onSuccess
 }: CreateProductProps) {
   const {
     register,
@@ -24,9 +26,10 @@ export function CreateProduct({
   const onSubmit: SubmitHandler<Product> = async (data) => {
     try {
       onLoading?.(true);
-      await createProduct(data.name, data.unid, data.price);
+      await createProduct(data.name, data.unit, data.price);
       toast.success("Produto criado com sucesso!");
       openModal?.();
+      onSuccess?.();
     } catch (error) {
       if (error instanceof AxiosError) {
         toast.error(error.response?.data.message);
@@ -61,7 +64,7 @@ export function CreateProduct({
         </label>
         <select
           id="unid"
-          {...register("unid")}
+          {...register("unit")}
           className="outline-none border border-gray-200 rounded-sm text-sm
           text-gray-700"
         >
@@ -69,8 +72,8 @@ export function CreateProduct({
           <option value="UNIDADE">UNIDADE</option>
           <option value="CENTIMETROS">CENTIMETROS</option>
         </select>
-        {errors.unid && (
-          <span className="text-xs text-red-500">{errors.unid.message}</span>
+        {errors.unit && (
+          <span className="text-xs text-red-500">{errors.unit.message}</span>
         )}
         <label htmlFor="price" className="font-semibold text-sm mt-5">
           Preço (por unidade de medida):
