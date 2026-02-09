@@ -1,7 +1,7 @@
-import { type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { type Product } from "../../types/product";
-import { createProduct } from "../../services/productservice";
+import { type ProductRequest } from "../../types/product";
+import { createProduct, updateProduct } from "../../services/productservice";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 
@@ -10,29 +10,50 @@ interface CreateProductProps {
   onLoading?: (loading: boolean) => void;
   openModal?: () => void;
   onSuccess?: () => Promise<void>;
+  isUpdate?: boolean;
+  loadedProduct?: ProductRequest;
 }
 export function CreateProduct({
   children,
   openModal,
   onLoading,
-  onSuccess
+  onSuccess,
+  isUpdate,
+  loadedProduct
 }: CreateProductProps) {
+  const [error ,setError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Product>();
-  const onSubmit: SubmitHandler<Product> = async (data) => {
+  } = useForm<ProductRequest>();
+
+  useEffect(() => {
+      reset({
+        name: loadedProduct?.name,
+        price: loadedProduct?.price,
+        unit: loadedProduct?.unit
+      })
+    }, [loadedProduct, reset])
+
+  const onSubmit: SubmitHandler<ProductRequest> = async (data) => {
     try {
       onLoading?.(true);
-      await createProduct(data.name, data.unit, data.price);
-      toast.success("Produto criado com sucesso!");
-      openModal?.();
-      onSuccess?.();
+      if(isUpdate && loadedProduct){
+        await updateProduct(loadedProduct.name, data);
+        openModal?.();
+        onSuccess?.();
+      }else{
+        await createProduct(data);
+        toast.success("Produto criado com sucesso!");
+        openModal?.();
+        onSuccess?.();
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         toast.error(error.response?.data.message);
+        setError("Erro ao cadastrar produto.");
         console.error("Erro ao cadastrar produto", error.response?.data);
       }
     } finally {
@@ -86,6 +107,9 @@ export function CreateProduct({
           placeholder="Informe o preço do produto"
         />
         {children}
+        {error && (
+          <span className="text-xs text-red-500">{error}</span>
+        )}
       </form>
     </div>
   );

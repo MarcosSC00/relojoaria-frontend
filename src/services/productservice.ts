@@ -3,7 +3,11 @@ import type { ProductRequest, ProductResponse } from "../types/product";
 
 export async function createProduct(data: ProductRequest): Promise<ProductResponse> {
   const response = await api.post("api/product", data);
-  console.log("response do service" + response.data);
+  return response.data;
+}
+
+export async function updateProduct(name: string, data: ProductRequest): Promise<ProductResponse>{
+  const response = await api.put(`api/product/${name}`, data);
   return response.data;
 }
 export async function getProducts(): Promise<ProductResponse[]> {

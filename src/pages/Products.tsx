@@ -59,6 +59,8 @@ export function Product() {
                 unit={p.unit}
                 onDelete={handleDeleteProduct}
                 key={p.id}
+                onReaload={loadProducts}
+                isSubmiting={isSubmiting}
               />
             ))}
           </div>

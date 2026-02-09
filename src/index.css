@@ -15,3 +15,12 @@ button {
   cursor: pointer;
   outline: none;
 }
+
+@keyframes loader-progress {
+  from {
+    stroke-dashoffset: var(--circle-length);
+  }
+  to {
+    stroke-dashoffset: var(--progress-offset);
+  }
+}

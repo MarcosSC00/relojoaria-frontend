@@ -49,10 +49,12 @@ export function CreateTask({
       openModal?.();
       onSuccess?.();
     } catch (error) {
+      setErrorService("Erro ao cadastrar serviço.")
       toast.error("erro ao cadastrar tarefa");
       console.error("erro ao cadastrar tarefa", error);
     } finally{
       onLoading?.(false);
+      openModal?.();
     }
   };
   return (
@@ -68,7 +70,7 @@ export function CreateTask({
           type="text"
           id="cliente"
           className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
-          {...register("clientId", { required: "Informe o cliente." })}
+          {...register("clientId", { required: "Informe o cliente." , valueAsNumber: true})}
           placeholder="Informe o cliente"
         />
         {errors.clientId && (
@@ -132,7 +134,10 @@ export function CreateTask({
               id="addvalue"
               placeholder="R$ 0.00"
               className="outline-none border border-gray-200 rounded-sm p-1 text-sm"
-              {...register("addValue")}
+              {...register("addValue", {
+                setValueAs: (value) =>
+                  value ? value : null
+              })}
             />
           </div>
           <div className="flex flex-col">
@@ -141,7 +146,7 @@ export function CreateTask({
             </label>
             <select
               id="product"
-              {...register("items.name")}
+              {...register("items.0.productName")}
               className="outline-none border border-gray-200 rounded-sm text-gray-600 p-1 text-sm"
             >
               <option value="ouro">Ouro</option>
@@ -158,7 +163,23 @@ export function CreateTask({
               id="quantity"
               placeholder="0.00"
               className="outline-none border border-gray-200 rounded-sm p-1 text-sm"
-              {...register("items.quantity")}
+              {...register("items.0.quantityUsed", {valueAsNumber: true})}
+            />
+          </div>
+          
+          <div className="flex flex-col">
+            <label htmlFor="quantity" className="font-semibold text-sm">
+              Data para entrega:
+            </label>
+            <input
+              type="date"
+              id="quantity"
+              placeholder="dd/mm/aa"
+              className="outline-none border border-gray-200 rounded-sm p-1 text-sm"
+              {...register("endDate", {
+                  setValueAs: (value) =>
+                  value ? `${value}T00:00:00` : null,
+              })}
             />
           </div>
         </div>

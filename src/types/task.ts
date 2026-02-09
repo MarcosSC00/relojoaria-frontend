@@ -1,17 +1,14 @@
+import type { MaterialUsageRequest } from "./materialusagerequest";
+
 export interface TaskRequest {
-    id: number;
     clientId: number;
-    clientName: string;
     title: string;
     description: string;
     status: string;
-    addValue: number;
-    subServicesPrice: number;
+    addValue?: number;
     type: string;
-    items: any;
-    totalPrice: number;
-    createdAt: string;
-    updatedAt: string;
+    items: MaterialUsageRequest[];
+    endDate: string;
 }
 
 export interface TaskResponse {
@@ -24,7 +21,7 @@ export interface TaskResponse {
     addValue: string;
     subServicesPrice: any;
     type: string;
-    items: any;
+    items: MaterialUsageRequest[];
     totalPrice: number;
     createdAt: string;
     updatedAt: string;
