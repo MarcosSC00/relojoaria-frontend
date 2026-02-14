@@ -3,6 +3,8 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Pen,
+  Trash2,
 } from "lucide-react";
 import { Modal } from "./modal";
 import { CreateClient } from "./forms/createclient";
@@ -21,16 +23,16 @@ interface TableProps{
 export function Table({data, onDelete, onReaload, headElements, columns}: TableProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedEntity, setSelectedEntity] = useState<any | null>(null);
-
   const handleEdit = (entity: any) => {
     setSelectedEntity(entity);
     setIsOpen(true);
   }
+
   return (
     <>
     <table className="w-full text-sm">
       <thead>
-        <tr className="border-b text-xs border-gray-300 uppercase">
+        <tr className="border-b text-xs border-gray-300 uppercase bg-slate-200">
           {headElements.map((h, index) => 
             index == 0 ?
               <th className="px-4 py-3 text-left" key={index}>{h}</th> :
@@ -42,7 +44,11 @@ export function Table({data, onDelete, onReaload, headElements, columns}: TableP
         {data.map((d: any) => 
           <tr key={d.id} className="text-center border-b border-gray-300 text-gray-600">
             {columns.map((col) => (
-              <td className={`px-4 py-3 text-${col.align ?? "center"}`}>{col.render(d)}</td>
+              <td className={`px-4 py-3 text-${col.align ?? "center"}`}>
+                <span className={`${col.cssCustom ?? ""} text-xs font-semibold`}>
+                  {col.render(d)}
+                </span>
+              </td>
             ))}
             <td>
               <div className="flex gap-2 justify-center">
@@ -52,14 +58,14 @@ export function Table({data, onDelete, onReaload, headElements, columns}: TableP
                   font-bold text-gray-100 hover:bg-blue-600"
                   onClick={() => handleEdit(d)}
                 >
-                  Editar
+                  <Pen width={16}/>
                 </button>
                 <button
                   className="p-1 rounded-sm bg-red-500 text-xs
                   font-bold text-gray-100 hover:bg-red-600"
                   onClick={() => onDelete(d.id)}
                 >
-                  DELETAR
+                  <Trash2 width={16}/>
                 </button>
               </div>
             </td>

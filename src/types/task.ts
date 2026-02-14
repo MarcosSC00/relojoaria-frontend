@@ -26,3 +26,11 @@ export interface TaskResponse {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface TaskCustom {
+    id: number;
+    title: string;
+    qtdProductUsed: number;
+    totalProductPrice: number;
+    amountService: number;
+}

@@ -4,6 +4,7 @@ import { Pen, Trash2 } from "lucide-react";
 import type { ProductRequest, ProductResponse } from "../types/product";
 import { CreateProduct } from "./forms/createproduct";
 import * as Dialog from "@radix-ui/react-dialog"
+import { Link } from "react-router";
 
 interface ProductCardProps extends ProductResponse{
     onDelete: (name: string) => Promise<void>
@@ -11,7 +12,7 @@ interface ProductCardProps extends ProductResponse{
     isSubmiting: boolean
 }
 
-export function ProductCard({name, price, unit, onDelete, onReaload, isSubmiting}: ProductCardProps){
+export function ProductCard({id, name, price, unit, onDelete, onReaload, isSubmiting}: ProductCardProps){
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [selectedEntity, setSelectedEntity] = useState<ProductRequest | null>(null);
 
@@ -21,9 +22,13 @@ export function ProductCard({name, price, unit, onDelete, onReaload, isSubmiting
     }
     return(
         <>
-        <div className="grid grid-cols-4 px-5 py-4 border-b border-gray-200 items-center justify-between">
-            <h6 className="text-[18px] text-slate-800 font-bold relative">
-                <button onClick={() => setIsOpen(true)}>{name}</button>
+        <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr] px-5 py-4 border-b border-gray-200 items-center justify-between">
+            <h6 className="text-sm text-slate-800 font-semibold text-left px-2
+            rounded-md bg-slate-400/60 w-fit">
+                {id}
+            </h6>
+            <h6 className="text-[18px] text-slate-800 font-bold relative text-center">
+                <Link to={`/stock/${name}`}>{name}</Link>
             </h6>
             <h6 className="text-sm text-slate-800 font-bold text-center px-4
             rounded-md bg-green-400/60 w-[100px] justify-self-center">

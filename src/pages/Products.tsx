@@ -44,9 +44,10 @@ export function Product() {
       componentsChildren={
         <div className="w-full h-screen px-6 pb-2 grid md:grid-cols-3 gap-2">
           <div className="md:col-span-2 rounded-md shadow-sm bg-white border border-gray-100">
-            <div className=" grid grid-cols-4 px-5 py-2 bg-gray-100 items-center 
+            <div className=" grid grid-cols-[80px_1fr_1fr_1fr_1fr] px-5 py-2 bg-gray-100 items-center 
             justify-between rounded-[6px_6px_0_0]">
-              <h4 className="text-blue-950 font-bold">Nome</h4>
+              <h4 className="text-blue-950 font-bold">id</h4>
+              <h4 className="text-blue-950 font-bold text-center">Nome</h4>
               <h4 className="text-blue-950 font-bold text-center">Valor</h4>
               <h4 className="text-blue-950 font-bold text-center">Unidade</h4>
               <h4 className="text-blue-950 font-bold text-end">Ações</h4>

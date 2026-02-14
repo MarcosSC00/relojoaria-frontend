@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
     )
   },
   {
-    path: "/stock",
+    path: "/stock/:productName",
     element: (
       <ProtectedRoute requiredProfile="ADMIN">
         <Stock />

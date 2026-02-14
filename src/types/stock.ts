@@ -11,3 +11,10 @@ export interface StockRequest {
   productName: string;
   quantity: number;
 }
+
+export interface StockCustom{
+  id: number;
+  taskName: string;
+  qtdUsed: number;
+  value: number;
+}

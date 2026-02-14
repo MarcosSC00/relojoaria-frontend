@@ -1,5 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import type { StockRequest } from "../../types/stock";
+import { createStock } from "../../services/stockservice";
+import { toast } from "sonner";
 interface CreatStockInputs {
   productName: string;
   quantity: number;
@@ -7,8 +10,11 @@ interface CreatStockInputs {
 
 interface CreateStockProps {
   children: ReactNode;
+  onLoading: (loading: boolean) => void;
+  openModal: () => void;
+  onSuccess?: () => Promise<void>;
 }
-export function CreateStock({ children }: CreateStockProps) {
+export function CreateStock({ children, onLoading, onSuccess, openModal }: CreateStockProps) {
   const {
     register,
     handleSubmit,
@@ -16,12 +22,18 @@ export function CreateStock({ children }: CreateStockProps) {
   } = useForm<CreatStockInputs>();
   const [error, setError] = useState<string | null>(null);
 
-  const onSubmit: SubmitHandler<CreatStockInputs> = (data) => {
+  const onSubmit: SubmitHandler<CreatStockInputs> = async (data: StockRequest) => {
     try {
-      console.log(data);
+      onLoading?.(true);
+      await createStock(data);
+      onSuccess?.();
+      toast.success("Estoque cadastrado com sucesso.")
     } catch (error) {
       setError("erro ao cadastrar estoque");
       console.error("erro ao cadastrar estoque", error);
+    }finally{
+      onLoading?.(false);
+      openModal?.();
     }
   };
   return (

@@ -1,6 +1,6 @@
 import { api } from "../api/api";
 import type { SubTaskRequest, SubTaskResponse } from "../types/subtask";
-import type { TaskRequest, TaskResponse } from "../types/task";
+import type { TaskCustom, TaskRequest, TaskResponse } from "../types/task";
 
 export async function createTask(data: TaskRequest): Promise<TaskResponse>{
     const response = await api.post("api/service-order", data);
@@ -38,4 +38,9 @@ export async function removeSubTask(idTask: number, idSubTask: number): Promise<
 export async function getSubTasks(idTask: number): Promise<SubTaskResponse[]>{
     const result = await api.post(`api/service-order/${idTask}/subservices`);
     return result.data;
+}
+
+export async function getCustomTasks(productName: string): Promise<TaskCustom[]>{
+    const response = await api.get(`api/service-order/custom/${productName}`);
+    return response.data;
 }

@@ -8,6 +8,9 @@ import { Modal } from "../components/modal";
 import { CreateTask } from "../components/forms/createtask";
 import * as Dialog from "@radix-ui/react-dialog"
 import type { TableColumn } from "../types/tablecolumn";
+import { formatDate } from "../utils/dateFormater";
+import { coinFormater } from "../utils/coinFormater";
+import { statusConversor } from "../utils/statusConversor";
 
 export function Tasks(){
   const [tasks, setTasks] = useState<TaskResponse[]>([])
@@ -38,13 +41,18 @@ export function Tasks(){
   const columns: TableColumn<TaskResponse>[] = [
     {
       render: (t) => t.id,
-      align: "left"
+      align: "left",
+      cssCustom: "py-1 px-2 rounded-sm bg-green-400/20"
     },
     { render: (t) => t.title },
     { render: (t) => t.clientName},
-    {render: (t) => t.createdAt},
-    {render: (t) => t.totalPrice},
-    {render: (t) => t.status},
+    { render: (t) => formatDate(t.createdAt)},
+    { render: (t) => coinFormater(t.totalPrice)},
+    { 
+      render: (t) => <span className={`${t.status == "TODO" ? "text-red-600": 
+        t.status == "DONE" ? "text-green-600" : "text-blue-600"
+      }`}>{statusConversor(t.status)}</span>,
+    },
   ]
 
   useEffect(() => {

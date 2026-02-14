@@ -1,5 +1,6 @@
 import { api } from "../api/api";
 import type { ProductRequest, ProductResponse } from "../types/product";
+import type { ProductAnalysis } from "../types/product-analysis";
 
 export async function createProduct(data: ProductRequest): Promise<ProductResponse> {
   const response = await api.post("api/product", data);
@@ -20,6 +21,11 @@ export async function getProductById(id: number): Promise<ProductResponse> {
   return response.data;
 }
 
-export async function deleteProduct(name: string) {
+export async function deleteProduct(name: string): Promise<void> {
   await api.delete(`api/product/${name}`);
+}
+
+export async function getProductAnalysis(productName: string): Promise<ProductAnalysis>{
+    const response = await api.get(`api/product/analysis/${productName}`);
+    return response.data;
 }
