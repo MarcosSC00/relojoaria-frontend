@@ -31,10 +31,10 @@ export function Tasks(){
     try {
       await deleteTask(id);
       setTasks((prev) => prev.filter(p => p.id !== id));
-      toast.success("Serviço cadastrado com sucesso!")
+      toast.success("Serviço deletado com sucesso!")
     } catch (error) {
       console.error(error);
-      toast.error("Erro ao cadastrar serviço.")
+      toast.error("Erro ao deletar serviço.")
     }
   }
 
@@ -63,7 +63,7 @@ export function Tasks(){
       headerTitle="Relojoaria Digital"
       sessionTitle="Serviços"
       componentsChildren={
-        <div className="w-full px-6 py-8">
+        <div className="w-full max-h-screen px-6 py-8">
           <Table 
             data={tasks ?? []} 
             onDelete={handleDeleteTask} 

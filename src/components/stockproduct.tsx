@@ -1,5 +1,12 @@
+import { useState } from "react";
 import type { TaskCustom } from "../types/task"
 import { coinFormater } from "../utils/coinFormater";
+import { CreateStock } from "./forms/createstock";
+import { Modal } from "./modal";
+import * as Dialog from "@radix-ui/react-dialog"
+import { updateStock } from "../services/stockservice";
+import type { StockRequest } from "../types/stock";
+import { toast } from "sonner";
 
 interface StockProductProps {
     tasks: TaskCustom[];
@@ -8,6 +15,7 @@ interface StockProductProps {
     productPrice: number;
     qtdCurrent: number;
     productUnit: string;
+    onSuccess: () => Promise<void>;
 }
 
 export function StockProduct({
@@ -16,7 +24,12 @@ export function StockProduct({
     productName,
     productPrice,
     productUnit,
-    qtdCurrent }: StockProductProps){
+    qtdCurrent,
+    onSuccess }: StockProductProps){
+
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
+
     return (
         <div className="w-full h-full flex flex-col p-4">
             <div className="flex justify-between items-center px-1">
@@ -28,6 +41,7 @@ export function StockProduct({
                     <button 
                         className="px-4 py-1 text-xs rounded-md text-gray-200 bg-blue-900
                         font-semibold"
+                        onClick={() => setIsOpen(true)}
                     >
                         Atualizar estoque
                     </button>
@@ -69,6 +83,40 @@ export function StockProduct({
                     )): <h4>Nenhuma tarefa relacionada.</h4>}
                 </div>
             </div>
+            <Modal tiltle="Atualização de estoque" 
+                open={isOpen} 
+                setOpen={setIsOpen}
+                trigger={<></>}>
+                    <CreateStock
+                      onLoading={setIsSubmiting}
+                      openModal={() => setIsOpen(false)}
+                      onSuccess={onSuccess}
+                      isUpdate={true}
+                      loadedStock={productName}
+                    >
+                      <div className="flex justify-end gap-2 mt-5">
+                        <Dialog.Close
+                          className="p-1 border border-gray-300 rounded-md text-[#031D3B] font-semibold
+                        hover:bg-gray-200 transition-colors duration-150
+                          hover:cursor-pointer text-sm"
+                        >
+                          CANCELAR
+                        </Dialog.Close>
+                        <button
+                          type="submit"
+                          className={`p-1 ${
+                          isSubmiting
+                          ? "bg-[#85a0bf] hover:cursor-none border-[#85a0bf]"
+                          : "bg-[#031D3B]  hover:bg-[#020F1F]"
+                          } border border-[#031D3B] rounded-md text-gray-50 font-semibold
+                          transition-colors duration-150
+                          hover:cursor-pointer text-sm`}
+                        >
+                          {isSubmiting ? "SALVANDO..." : "SALVAR"}
+                        </button>
+                      </div>
+                    </CreateStock>
+                  </Modal>
         </div>
     )
 }

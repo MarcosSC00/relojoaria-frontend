@@ -1,7 +1,7 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { StockRequest } from "../../types/stock";
-import { createStock } from "../../services/stockservice";
+import { createStock, updateStock } from "../../services/stockservice";
 import { toast } from "sonner";
 interface CreatStockInputs {
   productName: string;
@@ -13,22 +13,32 @@ interface CreateStockProps {
   onLoading: (loading: boolean) => void;
   openModal: () => void;
   onSuccess?: () => Promise<void>;
+  loadedStock?: string;
+  isUpdate?: boolean;
 }
-export function CreateStock({ children, onLoading, onSuccess, openModal }: CreateStockProps) {
+export function CreateStock({ children, onLoading, onSuccess, openModal, isUpdate, loadedStock }: CreateStockProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm<CreatStockInputs>();
   const [error, setError] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<CreatStockInputs> = async (data: StockRequest) => {
+    var result;
     try {
       onLoading?.(true);
-      await createStock(data);
-      onSuccess?.();
-      toast.success("Estoque cadastrado com sucesso.")
-    } catch (error) {
+      if(isUpdate && loadedStock){
+         result = await updateStock(data);
+         onSuccess?.();
+         toast.success("Estoque atualizado com sucesso.")
+      }else {
+        await createStock(data);
+        onSuccess?.();
+        toast.success("Estoque cadastrado com sucesso.")
+      }
+    }catch (error) {
       setError("erro ao cadastrar estoque");
       console.error("erro ao cadastrar estoque", error);
     }finally{
@@ -36,6 +46,14 @@ export function CreateStock({ children, onLoading, onSuccess, openModal }: Creat
       openModal?.();
     }
   };
+    
+    
+
+    useEffect(() => {
+      reset({
+        productName: loadedStock
+      })
+    }, [loadedStock, reset])
   return (
     <div>
       <form

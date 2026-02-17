@@ -16,8 +16,8 @@ export async function getStockById(id: number): Promise<StockResponse>{
     return result.data;
 }
 
-export async function updateStock(id: number, quantity: number): Promise<StockResponse>{
-    const result = await api.put(`api/stock/${id}`, quantity);
+export async function updateStock(data: StockRequest): Promise<StockResponse>{
+    const result = await api.post(`api/stock/update`, data);
     return result.data;
 }
 

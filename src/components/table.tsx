@@ -22,15 +22,33 @@ interface TableProps{
 
 export function Table({data, onDelete, onReaload, headElements, columns}: TableProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [page, setPage] = useState(1);
   const [selectedEntity, setSelectedEntity] = useState<any | null>(null);
   const handleEdit = (entity: any) => {
     setSelectedEntity(entity);
     setIsOpen(true);
   }
+  const totalPages = Math.ceil(data.length / 10)
+
+  function goToNextPage() {
+    setPage(page + 1)
+  }
+
+  function goToPreviousPage() {
+    setPage(page - 1)
+  }
+
+  function goToFirstPage() {
+    setPage(1)
+  }
+
+  function goToLastPage() {
+    setPage(totalPages)
+  }
 
   return (
     <>
-    <table className="w-full text-sm">
+    <table className="w-full text-sm overflow-y-scroll">
       <thead>
         <tr className="border-b text-xs border-gray-300 uppercase bg-slate-200">
           {headElements.map((h, index) => 
@@ -75,23 +93,39 @@ export function Table({data, onDelete, onReaload, headElements, columns}: TableP
       <tfoot>
         <tr>
           <td colSpan={headElements.length - 1} className="text-gray-400 py-2">
-            <span className="ml-3">página 1 de 10</span>
+            <span className="ml-3">página {page} de {totalPages}</span>
           </td>
           <td colSpan={1} className="text-gray-400">
             <div className="text-center">
-              <button className="hover:text-gray-600">
+              <button 
+                className="hover:text-gray-600" 
+                onClick={goToFirstPage}
+                disabled={page === 1}
+              >
                 <ChevronsLeft className="w-5" />
               </button>
 
-              <button className="hover:text-gray-600">
+              <button 
+                className="hover:text-gray-600" 
+                onClick={goToPreviousPage}
+                disabled={page === 1}
+              >
                 <ChevronLeft className="w-5" />
               </button>
 
-              <button className="hover:text-gray-600">
+              <button 
+                className="hover:text-gray-600" 
+                onClick={goToNextPage}
+                disabled={page === totalPages}
+              >
                 <ChevronRight className="w-5" />
               </button>
 
-              <button className="hover:text-gray-600">
+              <button 
+                className="hover:text-gray-600" 
+                onClick={goToLastPage}
+                disabled={page === totalPages}
+              >
                 <ChevronsRight className="w-5" />
               </button>
             </div>

@@ -48,6 +48,7 @@ export function Stock(){
           <div className="bg-white rounded-md shadow-md border border-gray-200">
             {productAnalysis ? (
               <StockProduct
+                onSuccess={() => loadStock(productName ?? '')}
                 tasks={tasks}
                 productId={productAnalysis.productId}
                 productName={productAnalysis.productName}
@@ -105,7 +106,7 @@ export function Stock(){
           </div>
         </div>}
     >
-      <Modal tiltle="Cadastro de Produto" open={isOpen} setOpen={setIsOpen}>
+      <Modal tiltle="Cadastro de estoque" open={isOpen} setOpen={setIsOpen}>
         <CreateStock
           onLoading={setIsSubmiting}
           openModal={() => setIsOpen(false)}
