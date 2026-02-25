@@ -44,3 +44,6 @@ export async function getCustomTasks(productName: string): Promise<TaskCustom[]>
     const response = await api.get(`api/service-order/custom/${productName}`);
     return response.data;
 }
+export async function updateStatus(id: number, status: string): Promise<void> {
+    await api.put(`api/service-order/${id}/update-status`, {status});
+}

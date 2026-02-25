@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { PageWrapper } from "../components/pagewrapper";
 import { Table } from "../components/table";
-import { deleteTask, getAllTasks } from "../services/taskservice";
+import { deleteTask, getAllTasks, updateStatus } from "../services/taskservice";
 import type { TaskResponse } from "../types/task";
 import { toast } from "sonner";
 import { Modal } from "../components/modal";
@@ -10,7 +10,7 @@ import * as Dialog from "@radix-ui/react-dialog"
 import type { TableColumn } from "../types/tablecolumn";
 import { formatDate } from "../utils/dateFormater";
 import { coinFormater } from "../utils/coinFormater";
-import { statusConversor } from "../utils/statusConversor";
+import { statusConversor,revertStatusConversor } from "../utils/statusConversor";
 
 export function Tasks(){
   const [tasks, setTasks] = useState<TaskResponse[]>([])
@@ -29,6 +29,21 @@ export function Tasks(){
     }
   }
 
+  const status = ["PENDENTE", "FEITO", "EM ANDAMENTO"];
+
+  const getStatusColor = (status: string) => {
+  switch (status) {
+    case "DONE":
+      return "text-green-600";
+    case "IN_PROGRESS":
+      return "text-yellow-600";
+    case "TODO":
+      return "text-red-600";
+    default:
+      return "text-gray-600";
+  }
+};
+
   const handleDeleteTask = async (id: number) => {
     try {
       await deleteTask(id);
@@ -39,6 +54,20 @@ export function Tasks(){
       toast.error("Erro ao deletar serviço.")
     }
   }
+
+  const handleUpdateStatus = async (id: number, status: string) => {
+    try{
+      await updateStatus(id, status);
+      setTasks(prev =>
+        prev.map(task =>
+        task.id === id ? { ...task, status } : task
+      ));
+      toast.success("Status atualizado com sucesso.");
+    }catch(error){
+      console.error("Erro ao atualizar status");
+      toast.error("Erro ao atualizar status.");
+    }
+  } 
 
   const handleEdit = (entity: any) => {
     setSelectedEntity(entity);
@@ -59,9 +88,19 @@ export function Tasks(){
     { render: (t) => formatDate(t.createdAt)},
     { render: (t) => coinFormater(t.totalPrice)},
     { 
-      render: (t) => <span className={`${t.status == "TODO" ? "text-red-600": 
-        t.status == "DONE" ? "text-green-600" : "text-blue-600"
-      }`}>{statusConversor(t.status)}</span>,
+      render: (t) => 
+      <select 
+        id={`status${t.id}`} 
+        className={`outline-none ${getStatusColor(t.status)}`} 
+        value={t.status}
+        onChange={(e) => handleUpdateStatus(t.id, e.target.value)}
+      >
+        <option value={t.status}>{statusConversor(t.status)}</option>
+        {status.filter(s=>s !== statusConversor(t.status)).map((s, index) => (
+          <option value={revertStatusConversor(s)} key={index} className="text-gray-800">{s}</option>
+        ))}
+      </select>,
+      
     },
   ]
 

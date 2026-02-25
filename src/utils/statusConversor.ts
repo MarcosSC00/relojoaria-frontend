@@ -10,3 +10,16 @@ export const statusConversor = (status: string) => {
             return status;
     }
 }
+
+export const revertStatusConversor = (status: string) => {
+    switch(status){
+        case "PENDENTE":
+            return "TODO";
+        case "FEITO":
+            return "DONE";
+        case "EM ANDAMENTO":
+            return "IN_PROGRESS";
+        default:
+            return status;
+    }
+}
