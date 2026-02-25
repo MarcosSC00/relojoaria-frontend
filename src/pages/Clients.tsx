@@ -12,8 +12,10 @@ import { formatDate } from "../utils/dateFormater";
 
 export function Clients() {
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
+  const [selectedEntity, setSelectedEntity] = useState<any | null>(null);
 
   const loadClients = async () => {
     try{
@@ -35,6 +37,11 @@ export function Clients() {
       toast.error("Erro ao deletar cliente.");
     }
   };
+
+  const handleEdit = (entity: any) => {
+    setSelectedEntity(entity);
+    setIsEditOpen(true);
+  }
 
   const columns: TableColumn<Client>[] = [
     {
@@ -66,15 +73,51 @@ export function Clients() {
             data={clients ?? []} 
             onDelete={handleDeleteClient} 
             onReaload={loadClients}
+            onEdit={handleEdit}
             headElements={["Id", "NOME", "TELEFONE", "DATA DE CRIAÇÃO", "AÇÕES"]}
-            columns={columns}/>
+            columns={columns}
+          >
+            <Modal
+              open={isEditOpen}
+              setOpen={setIsEditOpen}
+              tiltle="Editar Cliente"
+              trigger={<></>}
+            >
+              {isEditOpen && selectedEntity && ( 
+                <CreateClient 
+                  loadedClient={selectedEntity} 
+                  isUpdate={true}
+                  openModal={() => setIsEditOpen(false)}
+                  onSuccess={loadClients}
+                >
+                  <div className="flex justify-end gap-2 mt-5">
+                  <Dialog.Close
+                    className="p-1 border border-gray-300 rounded-md text-[#031D3B] font-semibold
+                  hover:bg-gray-200 transition-colors duration-150
+                    hover:cursor-pointer text-sm"
+                  >
+                    CANCELAR
+                  </Dialog.Close>
+                  <button
+                    type="submit"
+                    className="p-1 bg-[#031D3B] border border-[#031D3B] rounded-md text-gray-50 font-semibold
+                  hover:bg-[#020F1F] transition-colors duration-150
+                    hover:cursor-pointer text-sm"
+                  >
+                    SALVAR
+                  </button>
+                </div>
+              </CreateClient>
+              )}
+            </Modal>
+          </Table>
         </div>
       }
     >
-      <Modal tiltle="Cadastro de Cliente" open={isOpen} setOpen={setIsOpen}>
+      <Modal tiltle="Cadastro de Cliente" open={isCreateOpen} setOpen={setIsCreateOpen}>
         <CreateClient
           onLoading={setIsSubmiting}
-          openModal={() => setIsOpen(false)}
+          openModal={() => setIsCreateOpen(false)}
           onSuccess={loadClients}
         >
           <div className="flex justify-end gap-2 mt-5">

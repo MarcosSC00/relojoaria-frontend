@@ -15,7 +15,9 @@ import { statusConversor } from "../utils/statusConversor";
 export function Tasks(){
   const [tasks, setTasks] = useState<TaskResponse[]>([])
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedEntity, setSelectedEntity] = useState<any | null>(null);
 
   const loadTasks = async () => {
     try{
@@ -38,13 +40,21 @@ export function Tasks(){
     }
   }
 
+  const handleEdit = (entity: any) => {
+    setSelectedEntity(entity);
+    setIsEditOpen(true);
+  }
+
   const columns: TableColumn<TaskResponse>[] = [
     {
       render: (t) => t.id,
       align: "left",
       cssCustom: "py-1 px-2 rounded-sm bg-green-400/20"
     },
-    { render: (t) => t.title },
+    { 
+      render: (t) => t.title, 
+      align:"left",
+    },
     { render: (t) => t.clientName},
     { render: (t) => formatDate(t.createdAt)},
     { render: (t) => coinFormater(t.totalPrice)},
@@ -68,16 +78,51 @@ export function Tasks(){
             data={tasks ?? []} 
             onDelete={handleDeleteTask} 
             onReaload={loadTasks}
+            onEdit={handleEdit}
             headElements={["ID", "TÍTULO", "Cliente", "DATA DE CRIAÇÃO", "Valor", "status", "ações"]}
             columns={columns}
-          />
+          >
+            <Modal
+              open={isEditOpen}
+              setOpen={setIsEditOpen}
+              tiltle="Editar Cliente"
+              trigger={<></>}
+            >
+              {isEditOpen && selectedEntity && ( 
+                <CreateTask 
+                  loadedTask={selectedEntity} 
+                  isUpdate={true}
+                  openModal={() => setIsEditOpen(false)}
+                  onSuccess={loadTasks}
+                >
+                  <div className="flex justify-end gap-2 mt-5">
+                    <Dialog.Close
+                      className="p-1 border border-gray-300 rounded-md text-[#031D3B] font-semibold
+                    hover:bg-gray-200 transition-colors duration-150
+                      hover:cursor-pointer text-sm"
+                    >
+                      CANCELAR
+                    </Dialog.Close>
+                    <button
+                      type="submit"
+                      className="p-1 bg-[#031D3B] border border-[#031D3B] rounded-md text-gray-50 font-semibold
+                    hover:bg-[#020F1F] transition-colors duration-150
+                      hover:cursor-pointer text-sm"
+                    >
+                      SALVAR
+                    </button>
+                  </div>
+              </CreateTask>
+              )}
+            </Modal>
+          </Table>
         </div>
       }
     >
-      <Modal tiltle="Cadastro de Serviço" open={isOpen} setOpen={setIsOpen}>
+      <Modal tiltle="Cadastro de Serviço" open={isCreateOpen} setOpen={setIsCreateOpen}>
         <CreateTask
           onLoading={setIsSubmiting}
-          openModal={() => setIsOpen(false)}
+          openModal={() => setIsCreateOpen(false)}
           onSuccess={loadTasks}
         >
           <div className="flex justify-end gap-2 mt-5">

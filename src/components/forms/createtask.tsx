@@ -1,9 +1,12 @@
-import { useState, type ReactNode } from "react";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useEffect, useState, type ReactNode } from "react";
+import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import type { TaskRequest, TaskResponse } from "../../types/task";
 import { createTask } from "../../services/taskservice";
 import { toast } from "sonner";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Minus, Plus } from "lucide-react";
+import { getJustNameProducts } from "../../services/productservice";
+import { getAllClientNames } from "../../services/clientservice";
+import { formatDate } from "../../utils/dateFormater";
 
 interface CreateServiceProps {
   children: ReactNode;
@@ -23,13 +26,69 @@ export function CreateTask({
   openModal
 }: CreateServiceProps) {
   const {
+    control,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<TaskRequest>({
-    defaultValues:{status: "TODO"}
+    defaultValues:{status: "TODO", items: [
+      {productName: "", quantityUsed: 0}
+    ]}
+
+  });
+  const {fields, append, remove} = useFieldArray({
+    control,
+    name: "items"
   });
   const [errorService, setErrorService] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [productNames, setProductNames] = useState<any[]>([]);
+  const [clientnames, setClientNames] = useState<any[]>([]);
+  const [isUsed, setIsUsed] = useState<boolean>(true);
+
+  const loadFiels = async() => {
+    try{
+      setLoading(true);
+      const [clientField, productField] = await Promise.all([
+        getAllClientNames(),
+        getJustNameProducts()
+      ]);
+      setClientNames(clientField);
+      setProductNames(productField);
+    }catch(error){
+      console.error(error);
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  const handleAlter = () => {
+    setIsUsed((prev) => !prev);
+  }
+
+  useEffect(() => {
+    loadFiels();
+  }, [])
+
+  useEffect(() => {
+    if (loadedTask && clientnames.length > 0) {
+      console.log(loadedTask)
+      reset({
+        clientName: loadedTask.clientName,
+        title: loadedTask.title,
+        type: loadedTask.type,
+        description: loadedTask.description,
+        addValue: loadedTask.addValue,
+        endDate: loadedTask.endDate
+        ? loadedTask.endDate.split("T")[0]
+        : "",
+        items: loadedTask.items?.length
+          ? loadedTask.items
+          : [{ productName: "", quantityUsed: 0 }]
+      });
+    }
+  }, [loadedTask, clientnames, reset]);
 
   const onSubmit: SubmitHandler<TaskRequest> = async (data: TaskRequest) => {
     try {
@@ -39,7 +98,7 @@ export function CreateTask({
         <div className="flex gap-2 items-center">
           <CheckCircle className="h-5 w-5 text-[#031D3B]" />
           <div className="flex flex-col">
-            <span className="font-medium">Cliente cadastrado!</span>
+            <span className="font-medium">Serviço cadastrado!</span>
             <span className="text-xs text-gray-500">
               Título: {result.title}
             </span>
@@ -63,23 +122,32 @@ export function CreateTask({
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-full overflow-y-auto"
       >
-        <label htmlFor="cliente" className="font-semibold text-sm">
+        <label htmlFor="client" className="font-semibold text-sm">
           Cliente:
         </label>
-        <input
-          type="text"
-          id="cliente"
-          className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
-          {...register("clientId", { required: "Informe o cliente." , valueAsNumber: true})}
-          placeholder="Informe o cliente"
-        />
-        {errors.clientId && (
-          <span className="text-xs text-red-500">{errors.clientId.message}</span>
+        <select
+          id="client"
+          {...register("clientName", {required: "Informe o cliente"})}
+          className="outline-none border border-gray-200 rounded-sm text-gray-600 p-1 text-sm"
+        >
+          <option value="">Selecione um cliente</option>
+          {loading ? (
+            <></>
+            ) : 
+            (
+              clientnames?.map((c, index) => (
+                <option value={c} key={index}>{c}</option>
+              ))
+            )}
+          </select>
+        {errors.clientName && (
+          <span className="text-xs text-red-500">{errors.clientName.message}</span>
         )}
         <label htmlFor="title" className="font-semibold text-sm mt-4">
           Title:
         </label>
         <input
+          id="title"
           type="text"
           placeholder="Titulo"
           className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
@@ -103,7 +171,7 @@ export function CreateTask({
           </span>
         )}
         
-        <div className="grid grid-cols-2 grid-rows-2 mt-4 gap-4">
+        <div className="grid grid-cols-2 grid-rows-[auto_auto_auto_auto] mt-4 gap-4">
           <fieldset>
             <legend className="font-semibold text-sm">Tipo:</legend>
             <div className="flex gap-2">
@@ -125,7 +193,8 @@ export function CreateTask({
               <label htmlFor="sale">Venda</label>
             </div>
           </fieldset>
-          <div>
+          {isUsed ? (
+            <div>
             <label htmlFor="addvalue" className="font-semibold text-sm">
               Valor adicional:
             </label>
@@ -133,47 +202,105 @@ export function CreateTask({
               type="number"
               id="addvalue"
               placeholder="R$ 0.00"
-              className="outline-none border border-gray-200 rounded-sm p-1 text-sm"
+              className="outline-none w-full border border-gray-200 rounded-sm p-1 text-sm"
               {...register("addValue", {
                 setValueAs: (value) =>
-                  value ? value : null
+                  value ? value : null,
               })}
             />
           </div>
-          <div className="flex flex-col">
-            <label htmlFor="product" className="font-semibold text-sm">
-              Produto usado:
-            </label>
-            <select
-              id="product"
-              {...register("items.0.productName")}
-              className="outline-none border border-gray-200 rounded-sm text-gray-600 p-1 text-sm"
-            >
-              <option value="ouro">Ouro</option>
-              <option value="prata">Prata</option>
-              <option value="cobre">Cobre</option>
-            </select>
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="quantity" className="font-semibold text-sm">
-              Quantidade usada:
+          ) : (
+            <div>
+            <label htmlFor="servicevalue" className="font-semibold text-sm">
+              Valor do serviço:
             </label>
             <input
               type="number"
-              id="quantity"
-              placeholder="0.00"
+              id="servicevalue"
+              placeholder="R$ 0.00"
               className="outline-none border border-gray-200 rounded-sm p-1 text-sm"
-              {...register("items.0.quantityUsed", {valueAsNumber: true})}
+              {...register("addValue", {
+                setValueAs: (value) =>
+                  value ? value : null,
+                required: "Informe o valor"
+              })}
             />
           </div>
-          
-          <div className="flex flex-col">
-            <label htmlFor="quantity" className="font-semibold text-sm">
+          )}
+          <div className="flex items-center col-span-2 gap-4">
+            <label htmlFor="materialuse" className="font-semibold text-sm">Adicionar uso de materiais</label>
+            <input 
+              id="materialuse"
+              type="checkbox" 
+              className="accent-blue-600 w-4 h-4" 
+              checked={isUsed}
+              onChange={handleAlter}
+            />
+          </div>
+          {isUsed && (
+            fields.map((field, index) => (
+              <div key={field.id} className="flex items-center gap-4 col-span-2">
+                <div className="flex flex-col">
+                  <label htmlFor={`product${index}`} className="font-semibold text-sm">
+                    Produto usado:
+                  </label>
+                  <select
+                    id={`product${index}`}
+                    {...register(`items.${index}.productName`)}
+                    className="outline-none border border-gray-200 rounded-sm text-gray-600 p-1 text-sm"
+                  >
+                    <option value="">Selecione um produto</option>
+                    {loading ? (
+                      <></>
+                    ) : (
+                      productNames?.map((p, index) => (
+                        <option value={p} key={index}>{p}</option>
+                      ))
+                    )}
+                  </select>
+                </div>
+                <div className="flex flex-col">
+                  <label htmlFor={`quantity${index}`} className="font-semibold text-sm">
+                    Quantidade usada:
+                  </label>
+                  <input
+                    type="number"
+                    id={`quantity${index}`}
+                    placeholder="0.00"
+                    className="outline-none border border-gray-200 rounded-sm p-1 text-sm"
+                    {...register(`items.${index}.quantityUsed`, {valueAsNumber: true})}
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="p-1 rounded-sm bg-red-500 text-gray-100 mt-[15px]
+                  disabled:bg-gray-500"
+                  disabled={fields.length <= 1}
+                  onClick={() => remove(index)}
+                >
+                  <Minus size={12}/>
+                </button>
+              </div>
+          ))
+          )}
+          {isUsed && (
+            <button
+              type="button"
+              className="flex justify-center col-span-2 p-1 rounded-sm text-gray-100 bg-blue-900
+              hover:scale-95 hover:bg-blue-950 transition-all duration-150"
+              onClick={() => append({productName: "", quantityUsed: 0})}
+            >
+              <Plus />
+            </button>
+          )}
+        </div>
+        <div className="flex flex-col w-fit mt-4">
+            <label htmlFor="date" className="font-semibold text-sm">
               Data para entrega:
             </label>
             <input
               type="date"
-              id="quantity"
+              id="date"
               placeholder="dd/mm/aa"
               className="outline-none border border-gray-200 rounded-sm p-1 text-sm"
               {...register("endDate", {
@@ -182,7 +309,6 @@ export function CreateTask({
               })}
             />
           </div>
-        </div>
         {errorService && (
           <span className="text-sm text-red-500">{errorService}</span>
         )}

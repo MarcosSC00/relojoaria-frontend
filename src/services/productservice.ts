@@ -29,3 +29,8 @@ export async function getProductAnalysis(productName: string): Promise<ProductAn
     const response = await api.get(`api/product/analysis/${productName}`);
     return response.data;
 }
+
+export async function getJustNameProducts(): Promise<any[]> {
+  const response = await api.get(`api/product/get-just-name`);
+  return response.data;
+}

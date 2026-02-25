@@ -1,7 +1,7 @@
 import type { MaterialUsageRequest } from "./materialusagerequest";
 
 export interface TaskRequest {
-    clientId: number;
+    clientName: string;
     title: string;
     description: string;
     status: string;
@@ -18,13 +18,14 @@ export interface TaskResponse {
     title: string;
     description: string;
     status: string;
-    addValue: string;
+    addValue: number;
     subServicesPrice: any;
     type: string;
     items: MaterialUsageRequest[];
     totalPrice: number;
     createdAt: string;
     updatedAt: string;
+    endDate: string;
 }
 
 export interface TaskCustom {

@@ -28,3 +28,8 @@ export async function getClients():Promise<Client[]>{
 export async function deleteClient(id: number): Promise<void>{
     await api.delete(`api/clients/${id}`)
 }
+
+export async function getAllClientNames(): Promise<String[]> {
+    const response = await api.get("api/clients/get-all-names");
+    return response.data;
+}

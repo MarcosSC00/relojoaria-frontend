@@ -65,7 +65,9 @@ export function Product() {
               />
             ))}
           </div>
-          <div className="md:col-span-1 rounded-md shadow-sm bg-white border-gray-100"></div>
+          <div className="flex flex-col items-center md:col-span-1 rounded-md shadow-sm bg-white border-gray-100">
+            <h4 className="text-md font-bold my-2 text-blue-950">Consumo</h4>
+          </div>
         </div>
       }
     >
