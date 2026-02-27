@@ -7,6 +7,7 @@ import { CheckCircle, Minus, Plus } from "lucide-react";
 import { getJustNameProducts } from "../../services/productservice";
 import { getAllClientNames } from "../../services/clientservice";
 import { formatDate } from "../../utils/dateFormater";
+import { CreateSubTask } from "./createsubtask";
 
 interface CreateServiceProps {
   children: ReactNode;
@@ -46,6 +47,7 @@ export function CreateTask({
   const [productNames, setProductNames] = useState<any[]>([]);
   const [clientnames, setClientNames] = useState<any[]>([]);
   const [isUsed, setIsUsed] = useState<boolean>(true);
+  const [haveSubTask, setHaveSubTask] = useState<boolean>(false);
 
   const loadFiels = async() => {
     try{
@@ -63,8 +65,12 @@ export function CreateTask({
     }
   }
 
-  const handleAlter = () => {
+  const handleAlterMaterialUsage = () => {
     setIsUsed((prev) => !prev);
+  }
+
+  const handleAlterAddSubTask = () => {
+    setHaveSubTask((prev) => !prev);
   }
 
   useEffect(() => {
@@ -171,7 +177,8 @@ export function CreateTask({
           </span>
         )}
         
-        <div className="grid grid-cols-2 grid-rows-[auto_auto_auto_auto] mt-4 gap-4">
+        <div className={`grid grid-cols-2 ${isUsed ? 'grid-rows-[auto_auto_auto_auto]': ''} 
+        mt-4 gap-4`}>
           <fieldset>
             <legend className="font-semibold text-sm">Tipo:</legend>
             <div className="flex gap-2">
@@ -234,7 +241,7 @@ export function CreateTask({
               type="checkbox" 
               className="accent-blue-600 w-4 h-4" 
               checked={isUsed}
-              onChange={handleAlter}
+              onChange={handleAlterMaterialUsage}
             />
           </div>
           {isUsed && (
@@ -294,6 +301,31 @@ export function CreateTask({
             </button>
           )}
         </div>
+        <div className="flex gap-4 items-center my-5">
+          <span className="font-semibold text-sm">Adicionar subserviço</span>
+          <label htmlFor="addSubTask" className="relative inline-flex items-center cursor-pointer">
+            <input 
+              id="addSubTask" 
+              className="sr-only peer"
+              checked={haveSubTask}
+              type="checkbox"
+              onChange={handleAlterAddSubTask}
+            />
+            <div className="peer bg-gray-400 rounded-full outline-none duration-150 after:duration-150
+              w-8 h-4  shadow-inner peer-checked:bg-blue-500 
+              peer-focus:outline-none
+              after:content-[''] after:rounded-full 
+              after:absolute after:outline-none after:h-2.5 after:w-2.5 
+              after:bg-gray-50 after:left-0 after:translate-x-1/2
+              after:top-1/2 after:-translate-y-1/2 after:flex 
+              after:justify-center after:items-center 
+              peer-checked:after:translate-x-4.5">
+            </div>
+          </label>
+        </div>
+        {haveSubTask && (
+          <CreateSubTask />
+        )}
         <div className="flex flex-col w-fit mt-4">
             <label htmlFor="date" className="font-semibold text-sm">
               Data para entrega:
