@@ -1,41 +1,36 @@
-import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
-import type { SubTaskForm, SubTaskRequest } from "../../types/subtask";
-import { useState } from "react";
-import { Plus } from "lucide-react";
+import { useFieldArray, type Control, type UseFormRegister, type FieldErrors } from "react-hook-form";
+import { Minus, Plus } from "lucide-react";
+import type { TaskRequest } from "../../types/task";
 
 interface CreateSubTaskProps{
-    submitForm?: () => SubmitHandler<SubTaskRequest>;
+    control: Control<TaskRequest>,
+    register: UseFormRegister<TaskRequest>
+    errors: FieldErrors<TaskRequest>
 }
 
-export function CreateSubTask({submitForm}: CreateSubTaskProps){
-    const {
-      control,
-      register,
-      handleSubmit,
-      reset,
-      formState: {errors}
-    } = useForm<SubTaskForm>({
-        defaultValues: {
-            subtasks: [
-                {title: "", description: "", price: 0}
-            ]
-        }
-    });
-    const [erro, setError] = useState();
+export function CreateSubTask({control, register, errors}: CreateSubTaskProps){
+    
     const {append, fields, remove,} = useFieldArray({
         control,
-        name: "subtasks"
+        name: "subServices"
     });
 
     return (
       <div>
-        <form
-          onSubmit={handleSubmit(submitForm? submitForm : ()=>null)}
-          className="flex flex-col w-full overflow-y-auto gap-4"
-        >
           {fields.map((field, index) => (
             <div key={field.id} className="flex flex-col border-b border-gray-400 pb-5">
-                <span className="text-xs text-red-500">Subtarefa {index + 1}</span>
+                <div className="flex gap-5 items-center mt-5">
+                  <span className="text-xs text-red-500">Subtarefa {index + 1}</span>
+                  <button
+                    type="button"
+                    className="p-1 rounded-sm bg-red-500 text-gray-100
+                    disabled:bg-gray-500"
+                    disabled={fields.length <= 1}
+                    onClick={() => remove(index)}
+                  >
+                    <Minus size={10}/>
+                  </button>
+                </div>
                 <label htmlFor="subTaskTitulo" className="font-semibold text-sm">
                     Título:
                 </label>
@@ -43,49 +38,49 @@ export function CreateSubTask({submitForm}: CreateSubTaskProps){
                     type="text"
                     id="subTaskTitulo"
                     className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
-                    {...register(`subtasks.${index}.title`, {
+                    {...register(`subServices.${index}.title`, {
                     required: "Informe o título",
                     })}
                 />
-          {errors.subtasks?.[index]?.title && (
-            <span className="text-xs text-red-500">{errors.subtasks?.[index]?.title.message}</span>
-          )}
-          <label htmlFor="subTaskDescription" className="font-semibold text-sm mt-4">
-            Descrição:
-          </label>
-          <input
-            type="text"
-            id="subTaskDescription"
-            className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
-            {...register(`subtasks.${index}.description`)}
-          />
-          {errors.subtasks?.[index]?.description && (
-            <span className="text-xs text-red-500">{errors.subtasks?.[index]?.message}</span>
-          )}
-          <label htmlFor="subTaskValue" className="font-semibold text-sm mt-4">
-            Valor da subtarefa:
-          </label>
-          <input
-            type="number"
-            id="subTaskValue"
-            placeholder="R$ 0.00"
-            className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
-            {...register(`subtasks.${index}.price`)}
-          />
-          {errors.subtasks?.[index]?.price && (
-            <span className="text-xs text-red-500">{errors.subtasks?.[index]?.price.message}</span>
-          )}
+                {errors.subServices?.[index]?.title && (
+                  <span className="text-xs text-red-500">{errors.subServices?.[index]?.title.message}</span>
+                )}
+                <label htmlFor="subTaskDescription" className="font-semibold text-sm mt-4">
+                  Descrição:
+                </label>
+                <input
+                  type="text"
+                  id="subTaskDescription"
+                  className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
+                  {...register(`subServices.${index}.description`)}
+                />
+                {errors.subServices?.[index]?.description && (
+                  <span className="text-xs text-red-500">{errors.subServices?.[index]?.message}</span>
+                )}
+                <label htmlFor="subTaskValue" className="font-semibold text-sm mt-4">
+                  Valor da subtarefa:
+                </label>
+                <input
+                  type="number"
+                  id="subTaskValue"
+                  placeholder="R$ 0.00"
+                  className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
+                  {...register(`subServices.${index}.price`)}
+                />
+                {errors.subServices?.[index]?.price && (
+                  <span className="text-xs text-red-500">{errors.subServices?.[index]?.price.message}</span>
+                )}
             </div>
+            
           ))}
           <button
             type="button"
-            className="flex mt-2 justify-center col-span-2 p-1 rounded-sm text-gray-100 bg-blue-900
+            className="flex w-full mt-2 justify-center col-span-2 p-1 rounded-sm text-gray-100 bg-blue-900
             hover:scale-95 hover:bg-blue-950 transition-all duration-150"
-            onClick={() => append({title: "", description: "", price: 0})}
+            onClick={() => append({title: "", description: "", price: null})}
           >
             <Plus />
           </button>
-        </form>
     </div>
   );
 }

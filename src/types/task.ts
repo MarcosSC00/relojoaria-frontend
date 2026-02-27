@@ -1,5 +1,5 @@
 import type { MaterialUsageRequest } from "./materialusagerequest";
-import type { SubTaskRequest } from "./subtask";
+import type { SubTaskRequest, SubTaskResponse } from "./subtask";
 
 export interface TaskRequest {
     clientName: string;
@@ -10,7 +10,7 @@ export interface TaskRequest {
     type: string;
     items: MaterialUsageRequest[];
     endDate: string;
-    subtasks: SubTaskRequest[];
+    subServices: SubTaskRequest[];
 }
 
 export interface TaskResponse {
@@ -24,6 +24,7 @@ export interface TaskResponse {
     subServicesPrice: any;
     type: string;
     items: MaterialUsageRequest[];
+    subServices: SubTaskResponse[];
     totalPrice: number;
     createdAt: string;
     updatedAt: string;

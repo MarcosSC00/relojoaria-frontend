@@ -1,4 +1,4 @@
 export interface MaterialUsageRequest{
     productName: string;
-    quantityUsed: number;
+    quantityUsed: number | null;
 }

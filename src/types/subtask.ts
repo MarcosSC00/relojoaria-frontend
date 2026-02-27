@@ -1,7 +1,7 @@
 export interface SubTaskRequest {
     title: string;
     description: string;
-    price: number;
+    price: number | null;
 }
 
 export interface SubTaskForm {
@@ -10,4 +10,5 @@ export interface SubTaskForm {
 export interface SubTaskResponse {
     title: string;
     description: string;
+    price: number;
 }

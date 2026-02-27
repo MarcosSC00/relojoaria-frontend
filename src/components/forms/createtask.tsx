@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { CheckCircle, Minus, Plus } from "lucide-react";
 import { getJustNameProducts } from "../../services/productservice";
 import { getAllClientNames } from "../../services/clientservice";
-import { formatDate } from "../../utils/dateFormater";
 import { CreateSubTask } from "./createsubtask";
 
 interface CreateServiceProps {
@@ -33,10 +32,12 @@ export function CreateTask({
     reset,
     formState: { errors },
   } = useForm<TaskRequest>({
-    defaultValues:{status: "TODO", items: [
-      {productName: "", quantityUsed: 0}
-    ]}
-
+    defaultValues:{
+      status: "TODO", 
+      items: [
+        {productName: "", quantityUsed: null}
+      ], 
+      subServices: [{title: "", description: "", price: null}]}
   });
   const {fields, append, remove} = useFieldArray({
     control,
@@ -79,6 +80,7 @@ export function CreateTask({
 
   useEffect(() => {
     if (loadedTask && clientnames.length > 0) {
+      if(loadedTask.subServices.length >= 1){setHaveSubTask(true)}
       console.log(loadedTask)
       reset({
         clientName: loadedTask.clientName,
@@ -91,7 +93,9 @@ export function CreateTask({
         : "",
         items: loadedTask.items?.length
           ? loadedTask.items
-          : [{ productName: "", quantityUsed: 0 }]
+          : [{ productName: "", quantityUsed: null }],
+        subServices: loadedTask.subServices?.length
+          ? loadedTask.subServices : [{title: "", description: "", price: null}]
       });
     }
   }, [loadedTask, clientnames, reset]);
@@ -295,7 +299,7 @@ export function CreateTask({
               type="button"
               className="flex justify-center col-span-2 p-1 rounded-sm text-gray-100 bg-blue-900
               hover:scale-95 hover:bg-blue-950 transition-all duration-150"
-              onClick={() => append({productName: "", quantityUsed: 0})}
+              onClick={() => append({productName: "", quantityUsed: null})}
             >
               <Plus />
             </button>
@@ -324,7 +328,11 @@ export function CreateTask({
           </label>
         </div>
         {haveSubTask && (
-          <CreateSubTask />
+          <CreateSubTask 
+            control={control}
+            errors={errors}
+            register={register}
+          />
         )}
         <div className="flex flex-col w-fit mt-4">
             <label htmlFor="date" className="font-semibold text-sm">
