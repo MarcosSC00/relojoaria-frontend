@@ -6,6 +6,7 @@ import { Product } from "./pages/Products";
 import {ProtectedRoute} from "./components/protectedroutes"
 import { Tasks } from "./pages/Tasks";
 import { Stock } from "./pages/Stock";
+import { TaskDetails } from "./pages/TaskDetails";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute requiredProfile="ADMIN">
         <Tasks/>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/services/:id/details",
+    element: (
+      <ProtectedRoute>
+        <TaskDetails />
       </ProtectedRoute>
     )
   },

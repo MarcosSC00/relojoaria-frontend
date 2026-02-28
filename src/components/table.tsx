@@ -3,6 +3,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Eye,
   Pen,
   Trash2,
 } from "lucide-react";
@@ -80,6 +81,12 @@ export function Table({data, onDelete, children, onEdit, headElements, columns}:
                   onClick={() => onDelete(d.id)}
                 >
                   <Trash2 width={16}/>
+                </button>
+                <button
+                  className="p-1 rounded-sm bg-green-600 text-xs
+                  font-bold text-gray-200 hover:bg-green-700"
+                >
+                  <Eye width={16}/>
                 </button>
               </div>
             </td>
