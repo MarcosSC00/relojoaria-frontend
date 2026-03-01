@@ -1,55 +1,189 @@
-import { Calendar } from "lucide-react";
+import { Calendar, PencilIcon, Trash } from "lucide-react";
 import { Header } from "../components/header";
+import type { TaskResponse } from "../types/task";
+import { useParams } from "react-router";
+import { getTaskById, updateTask } from "../services/taskservice";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { coinFormater } from "../utils/coinFormater";
+import { formatDate } from "../utils/dateFormater";
+import { statusConversor } from "../utils/statusConversor";
+import { Modal } from "../components/modal";
+import { CreateTask } from "../components/forms/createtask";
+import * as Dialog from "@radix-ui/react-dialog";
 
 export function TaskDetails() {
+    const [task, setTask] = useState<TaskResponse>();
+    const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const {taskId} = useParams();
+    const loadTask = async (taskId: number) => {
+        try {
+            setIsLoading(true)
+            const task = await getTaskById(taskId);
+            setTask(task);
+            toast.success("Serviço carregado com sucesso.",{id:"loadtask"});
+        } catch (error) {
+            toast.error("Erro ao carregar serviço.")
+            console.error(error);
+        }finally{
+            setIsLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        if(taskId)
+            loadTask(parseInt(taskId));
+        else console.log("requisição não feita.")
+    },[taskId])
+
+    const handleEdit = () => {
+        setIsEditOpen(true);
+    }
+    
     return(
         <div className="flex flex-col min-h-screen bg-gray-100">
             <Header title="Relojoaria Digital"/>
-            <div className="flex flex-col w-[80%] md:w-[600px] gap-4 text-blue-950 rounded-md shadow-md bg-gray-50 mx-auto mt-10 p-5">
+            {task && !isLoading ? (
+                <div className="flex flex-col w-[80%] md:w-[600px] gap-4 
+            text-blue-950 rounded-md shadow-md bg-gray-50 mx-auto mt-10 p-5">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-xl font-bold">Titulo</h2>
+                        <h2 className="text-xl font-bold capitalize">{task.title}</h2>
                         <div className="flex gap-2 items-center bg-green-200 p-1 rounded-md">
                             <Calendar size={16}/>
-                            <span className="text-xs font-medium">27/02/2026</span>
+                            <span className="text-xs font-bold">{formatDate(task.createdAt)}</span>
                         </div>
                     </div>
-                    <span className="py-1 px-2 rounded-sm bg-green-200 font-bold">R$ 999.00</span>
+                    <span className="py-1 px-2 rounded-sm bg-green-200 font-bold">{coinFormater(task.totalPrice ?? 0)}</span>
                 </div>
                 <div className="flex flex-col gap-1">
-                    <h4 className="text-md font-semibold">Descrição:</h4>
-                    <p className="border border-blue-900/20 rounded-sm p-1 text-slate-600">descriler ifjelifef je eroi efjlej</p>
+                    <h4 className="text-md font-bold">Descrição:</h4>
+                    <p className="border border-blue-900/20 rounded-sm p-1 text-slate-600">{task.description}</p>
                 </div>
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                        <h4 className="text-md font-semibold">Cliente:</h4>
-                        <span className="capitalize">jupi</span>
+                    <div className="flex items-baseline gap-1">
+                        <h4 className="text-md font-bold">Cliente:</h4>
+                        <span className="capitalize font-medium text-slate-500">{task.clientName}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                        <h4 className="text-md font-semibold">Status:</h4>
-                        <span className="text-sm">PENDENTE</span>
+                    <div className="flex items-baseline gap-1">
+                        <h4 className="text-md font-bold">Status:</h4>
+                        <span className="text-sm font-medium text-slate-500 capitalize">{statusConversor(task.status)}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                        <h4 className="text-md font-semibold">Tipo:</h4>
-                        <span className="text-sm">Venda</span>
+                    <div className="flex items-baseline gap-1">
+                        <h4 className="text-md font-bold">Tipo:</h4>
+                        <span className="text-sm font-medium text-slate-500">{task.type === "SALE" ? "Venda" : "Conserto"}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                        <h4 className="text-md font-semibold">Entrega:</h4>
+                    <div className="flex items-baseline gap-1">
+                        <h4 className="text-md font-bold">Entrega:</h4>
                         <div className="flex gap-2 items-center">
-                            <span className="text-xs font-medium">27/02/2026</span>
+                            <span className="text-sm font-medium text-slate-500">{formatDate(task.endDate)}</span>
                         </div>
                     </div>
                 </div>
                 <div className="flex flex-col gap-1">
-                    <h4 className="text-md font-semibold">Materiais Usados:</h4>
-                    <div className="flex items-center justify-between">
-                        <div className="flex gap-2">
-                            <h4 className="font-semibold">Ouro</h4>
-                            <span>20 gramas</span>
+                    <h4 className="text-md font-bold">Materiais Usados:</h4>
+                    {task.items && task.items.length >= 1 ? (
+                        <div className="flex items-center gap-2 flex-wrap">
+                        {task?.items.map((i, index) => (
+                            <div className="flex items-baseline gap-2 px-3 
+                            bg-green-200 rounded-sm" key={index}>
+                                <h4 className="font-semibold">{i.productName}</h4>
+                                <span>-</span>
+                                <span className="text-xs">{i.quantityUsed}</span>
+                            </div>
+                        ))}
+                        
+                    </div>
+                    ) : (
+                        <span className="text-xs text-red-500">
+                            Sem uso de materiais.
+                        </span>
+                    )}
+                </div>
+
+                <div className="flex flex-col">
+                    <h4 className="text-md font-bold">Subserviços:</h4>
+                    <div className="">
+                        {task.subServices && task.subServices.length >= 1? (
+                            <table className="mt-2 w-full text-sm overflow-auto">
+                            <thead>
+                                <tr className="bg-gray-300">
+                                    <th>Titulo</th>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {task.subServices.map((s, index) => (
+                                    <tr className="text-center border-b border-gray-200" key={index}>
+                                        <td className="truncate py-1">{s.title}</td>
+                                        <td className="truncate">{s.description}</td>
+                                        <td>{coinFormater(s.price)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        ) : (
+                            <span className="text-xs text-red-500">
+                                Não possui subserviços.
+                            </span>
+                        )}
+                        <div className="flex items-center gap-2 justify-end mt-5">
+                            <button 
+                                onClick={handleEdit}
+                                className="flex items-center gap-1 py-1 px-4
+                              bg-blue-900 rounded-md text-gray-200 hover:bg-blue-950">
+                                <span className="font-semibold text-sm">Editar</span>
+                                <PencilIcon size={18} />
+                            </button>
+                            <button className="flex items-center gap-1 py-1 px-4
+                             bg-red-500 rounded-md text-gray-200 hover:bg-red-600">
+                                <span className="font-semibold text-sm">Excluir</span>
+                                <Trash size={18} />
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+            ) :(
+                <span className="m-auto text-xl font-semibold text-gray-600">
+                    Serviço não encontrado.
+                </span>
+            )}
+
+            <Modal
+                open={isEditOpen}
+                setOpen={setIsEditOpen}
+                tiltle="Editar Cliente"
+                trigger={<></>}
+            >
+                {isEditOpen && task && ( 
+                    <CreateTask 
+                        loadedTask={task} 
+                        isUpdate={true}
+                        openModal={() => setIsEditOpen(false)}
+                    >
+                        <div className="flex justify-end gap-2 mt-5">
+                        <Dialog.Close
+                            className="p-1 border border-gray-300 rounded-md text-[#031D3B] font-semibold
+                            hover:bg-gray-200 transition-colors duration-150
+                            hover:cursor-pointer text-sm"
+                        >
+                            CANCELAR
+                        </Dialog.Close>
+                        <button
+                            type="submit"
+                            className="p-1 bg-[#031D3B] border border-[#031D3B] rounded-md text-gray-50 font-semibold
+                            hover:bg-[#020F1F] transition-colors duration-150
+                            hover:cursor-pointer text-sm"
+                        >
+                            SALVAR
+                        </button>
+                        </div>
+                    </CreateTask>
+                )}
+            </Modal>
         </div>
     )
 }

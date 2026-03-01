@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import type { TaskRequest, TaskResponse } from "../../types/task";
-import { createTask } from "../../services/taskservice";
+import { createTask, updateTask } from "../../services/taskservice";
 import { toast } from "sonner";
 import { CheckCircle, Minus, Plus } from "lucide-react";
 import { getJustNameProducts } from "../../services/productservice";
@@ -95,7 +95,7 @@ export function CreateTask({
           ? loadedTask.items
           : [{ productName: "", quantityUsed: null }],
         subServices: loadedTask.subServices?.length
-          ? loadedTask.subServices : [{title: "", description: "", price: null}]
+          ? loadedTask.subServices : []
       });
     }
   }, [loadedTask, clientnames, reset]);
@@ -103,20 +103,38 @@ export function CreateTask({
   const onSubmit: SubmitHandler<TaskRequest> = async (data: TaskRequest) => {
     try {
       onLoading?.(true);
-      const result = await createTask(data);
-      toast(
-        <div className="flex gap-2 items-center">
-          <CheckCircle className="h-5 w-5 text-[#031D3B]" />
-          <div className="flex flex-col">
-            <span className="font-medium">Serviço cadastrado!</span>
-            <span className="text-xs text-gray-500">
-              Título: {result.title}
-            </span>
+      if(!isUpdate){
+        const result = await createTask(data);
+        toast(
+          <div className="flex gap-2 items-center">
+            <CheckCircle className="h-5 w-5 text-[#031D3B]" />
+            <div className="flex flex-col">
+              <span className="font-medium">Serviço cadastrado!</span>
+              <span className="text-xs text-gray-500">
+                Título: {result.title}
+              </span>
+            </div>
           </div>
-        </div>
-      );
-      openModal?.();
-      onSuccess?.();
+        );
+        openModal?.();
+        onSuccess?.();
+      }else if(isUpdate && loadedTask){
+        const result = await updateTask(loadedTask.id, data);
+        toast(
+          <div className="flex gap-2 items-center">
+            <CheckCircle className="h-5 w-5 text-[#031D3B]" />
+            <div className="flex flex-col">
+              <span className="font-medium">Serviço cadastrado!</span>
+              <span className="text-xs text-gray-500">
+                Título: {result.title}
+              </span>
+            </div>
+          </div>
+        );
+        openModal?.();
+        onSuccess?.();
+      }
+      
     } catch (error) {
       setErrorService("Erro ao cadastrar serviço.")
       toast.error("erro ao cadastrar tarefa");

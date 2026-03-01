@@ -120,6 +120,7 @@ export function Tasks(){
             onEdit={handleEdit}
             headElements={["ID", "TÍTULO", "Cliente", "DATA DE CRIAÇÃO", "Valor", "status", "ações"]}
             columns={columns}
+            pathDetails={`details`}
           >
             <Modal
               open={isEditOpen}

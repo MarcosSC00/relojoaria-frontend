@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import type { TableColumn } from "../types/tablecolumn";
+import { Link } from "react-router";
 
 interface TableProps{
   data: any;
@@ -18,9 +19,11 @@ interface TableProps{
   headElements: string[];
   columns: TableColumn<any>[];
   children: ReactNode;
+  pathDetails: string; 
 }
 
-export function Table({data, onDelete, children, onEdit, headElements, columns}: TableProps) {
+export function Table({data, onDelete, children, 
+  onEdit, headElements, columns, pathDetails}: TableProps) {
   const [page, setPage] = useState(1);
   const totalPages = Math.ceil(data.length / 10)
 
@@ -47,7 +50,7 @@ export function Table({data, onDelete, children, onEdit, headElements, columns}:
     <>
     <table className="w-full text-sm overflow-auto">
       <thead>
-        <tr className="justify-between border-b text-xs border-gray-300 uppercase bg-slate-200">
+        <tr className="border-b text-xs border-gray-300 uppercase bg-slate-200">
           {headElements.map((h, index) => 
             index == 0 ?
               <th className="px-4 py-3 text-left" key={index}>{h}</th> :
@@ -82,12 +85,13 @@ export function Table({data, onDelete, children, onEdit, headElements, columns}:
                 >
                   <Trash2 width={16}/>
                 </button>
-                <button
+                <Link
                   className="p-1 rounded-sm bg-green-600 text-xs
                   font-bold text-gray-200 hover:bg-green-700"
+                  to={`${pathDetails}/${d.id}`}
                 >
                   <Eye width={16}/>
-                </button>
+                </Link>
               </div>
             </td>
           </tr>

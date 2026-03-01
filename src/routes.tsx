@@ -45,7 +45,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/services/:id/details",
+    path: "/services/details/:taskId",
     element: (
       <ProtectedRoute>
         <TaskDetails />
