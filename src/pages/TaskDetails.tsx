@@ -2,7 +2,7 @@ import { Calendar, PencilIcon, Trash } from "lucide-react";
 import { Header } from "../components/header";
 import type { TaskResponse } from "../types/task";
 import { useParams } from "react-router";
-import { getTaskById, updateTask } from "../services/taskservice";
+import { getTaskById } from "../services/taskservice";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { coinFormater } from "../utils/coinFormater";
@@ -24,7 +24,7 @@ export function TaskDetails() {
             setTask(task);
             toast.success("Serviço carregado com sucesso.",{id:"loadtask"});
         } catch (error) {
-            toast.error("Erro ao carregar serviço.")
+            toast.error("Erro ao carregar serviço.", {id:"loadError"})
             console.error(error);
         }finally{
             setIsLoading(false);
@@ -34,13 +34,37 @@ export function TaskDetails() {
     useEffect(() => {
         if(taskId)
             loadTask(parseInt(taskId));
-        else console.log("requisição não feita.")
-    },[taskId])
+    },[taskId]);
+
 
     const handleEdit = () => {
         setIsEditOpen(true);
     }
-    
+    const handleDeleteTask = () => {
+        toast(
+            <div className="w-auto focus: h-30 flex flex-col justify-between m-auto">
+                <span className="text-xl">Deseja realmente excluir esse serviço?</span>
+                <div className="flex items-center gap-2">
+                    <button 
+                        className="flex items-center gap-1 py-1 px-4
+                        bg-blue-900 rounded-md text-gray-200 hover:bg-blue-950">
+                        <span className="font-semibold text-sm">Cancelar</span>
+                        <PencilIcon size={18} />
+                    </button>
+                    <button
+                        onClick={() => toast.dismiss()} 
+                        className="flex items-center gap-1 py-1 px-4
+                        bg-red-500 rounded-md text-gray-200 hover:bg-red-600"
+                    >
+                        <span className="font-semibold text-sm">Excluir</span>
+                        <Trash size={18} />
+                    </button>
+                </div>
+            </div>
+        ,
+        {id: "deleteConfirm", position:"top-center", duration:10000 }
+      );
+    }
     return(
         <div className="flex flex-col min-h-screen bg-gray-100">
             <Header title="Relojoaria Digital"/>
@@ -55,7 +79,12 @@ export function TaskDetails() {
                             <span className="text-xs font-bold">{formatDate(task.createdAt)}</span>
                         </div>
                     </div>
-                    <span className="py-1 px-2 rounded-sm bg-green-200 font-bold">{coinFormater(task.totalPrice ?? 0)}</span>
+                    <div className="flex items-center gap-2 font-semibold">
+                        <h6>Valor Total:</h6>
+                        <span className="py-1 px-2 rounded-sm bg-green-200 font-bold">
+                            {coinFormater(task.totalPrice ?? 0)}
+                        </span>
+                    </div>
                 </div>
                 <div className="flex flex-col gap-1">
                     <h4 className="text-md font-bold">Descrição:</h4>
@@ -81,19 +110,28 @@ export function TaskDetails() {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1 p-1">
                     <h4 className="text-md font-bold">Materiais Usados:</h4>
                     {task.items && task.items.length >= 1 ? (
                         <div className="flex items-center gap-2 flex-wrap">
-                        {task?.items.map((i, index) => (
-                            <div className="flex items-baseline gap-2 px-3 
-                            bg-green-200 rounded-sm" key={index}>
-                                <h4 className="font-semibold">{i.productName}</h4>
-                                <span>-</span>
-                                <span className="text-xs">{i.quantityUsed}</span>
-                            </div>
-                        ))}
-                        
+                            <table className="mt-2 w-full text-sm overflow-auto">
+                                <thead>
+                                    <tr className="bg-green-200">
+                                        <th>Produto</th>
+                                        <th>Quantidade</th>
+                                        <th>Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {task?.items.map((i, index) => (
+                                        <tr key={index} className="text-center border-b border-gray-200">
+                                            <td className="truncate p-1">{i.productName}</td>
+                                            <td className="truncate lowercase">{`${i.quantityUsed} ${i.unit}(s)`}</td>
+                                            <td className="truncate">{coinFormater(i.subTotal)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                     </div>
                     ) : (
                         <span className="text-xs text-red-500">
@@ -129,6 +167,16 @@ export function TaskDetails() {
                                 Não possui subserviços.
                             </span>
                         )}
+                        <div className="flex items-baseline gap-2 mt-2">
+                            <h4 className="text-md font-bold">Valor adicional:</h4>
+                            <div className="flex gap-2 items-center">
+                                <span className="text-sm text-slate-700 font-bold px-2 bg-green-200
+                                rounded-sm">
+                                    {task.addValue ? coinFormater(task.addValue)
+                                    : coinFormater(0)}
+                                </span>
+                            </div>
+                        </div>
                         <div className="flex items-center gap-2 justify-end mt-5">
                             <button 
                                 onClick={handleEdit}
@@ -137,8 +185,11 @@ export function TaskDetails() {
                                 <span className="font-semibold text-sm">Editar</span>
                                 <PencilIcon size={18} />
                             </button>
-                            <button className="flex items-center gap-1 py-1 px-4
-                             bg-red-500 rounded-md text-gray-200 hover:bg-red-600">
+                            <button 
+                                className="flex items-center gap-1 py-1 px-4
+                              bg-red-500 rounded-md text-gray-200 hover:bg-red-600"
+                                onClick={handleDeleteTask}
+                            >
                                 <span className="font-semibold text-sm">Excluir</span>
                                 <Trash size={18} />
                             </button>
@@ -163,6 +214,7 @@ export function TaskDetails() {
                         loadedTask={task} 
                         isUpdate={true}
                         openModal={() => setIsEditOpen(false)}
+                        onSuccess={() => loadTask(task.id)}
                     >
                         <div className="flex justify-end gap-2 mt-5">
                         <Dialog.Close

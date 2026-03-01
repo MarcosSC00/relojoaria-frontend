@@ -3,7 +3,7 @@ import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import type { TaskRequest, TaskResponse } from "../../types/task";
 import { createTask, updateTask } from "../../services/taskservice";
 import { toast } from "sonner";
-import { CheckCircle, Minus, Plus } from "lucide-react";
+import { AlertCircle, CheckCircle, Minus, Plus } from "lucide-react";
 import { getJustNameProducts } from "../../services/productservice";
 import { getAllClientNames } from "../../services/clientservice";
 import { CreateSubTask } from "./createsubtask";
@@ -115,7 +115,7 @@ export function CreateTask({
               </span>
             </div>
           </div>
-        );
+        , {id: "create-task"});
         openModal?.();
         onSuccess?.();
       }else if(isUpdate && loadedTask){
@@ -124,13 +124,13 @@ export function CreateTask({
           <div className="flex gap-2 items-center">
             <CheckCircle className="h-5 w-5 text-[#031D3B]" />
             <div className="flex flex-col">
-              <span className="font-medium">Serviço cadastrado!</span>
+              <span className="font-medium">Serviço atualizado!</span>
               <span className="text-xs text-gray-500">
                 Título: {result.title}
               </span>
             </div>
           </div>
-        );
+        , {id: "update-task", icon:<AlertCircle/>});
         openModal?.();
         onSuccess?.();
       }
