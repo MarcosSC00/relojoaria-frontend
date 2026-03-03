@@ -7,6 +7,7 @@ import {ProtectedRoute} from "./components/protectedroutes"
 import { Tasks } from "./pages/Tasks";
 import { Stock } from "./pages/Stock";
 import { TaskDetails } from "./pages/TaskDetails";
+import { ClientDetails } from "./pages/ClientDetails";
 
 export const router = createBrowserRouter([
   {
@@ -24,9 +25,16 @@ export const router = createBrowserRouter([
     path: "/clients",
     element: 
       <ProtectedRoute requiredProfile="ADMIN">
-        <Clients/>
+        <Clients />
       </ProtectedRoute>
     
+  },
+  {
+    path: "/clients/details/:clientId",
+    element:
+      <ProtectedRoute requiredProfile="ADMIN">
+        <ClientDetails /> 
+      </ProtectedRoute>
   },
   {
     path: "/products",

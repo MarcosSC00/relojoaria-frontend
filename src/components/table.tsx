@@ -19,11 +19,10 @@ interface TableProps{
   headElements: string[];
   columns: TableColumn<any>[];
   children: ReactNode;
-  pathDetails: string; 
 }
 
 export function Table({data, onDelete, children, 
-  onEdit, headElements, columns, pathDetails}: TableProps) {
+  onEdit, headElements, columns}: TableProps) {
   const [page, setPage] = useState(1);
   const totalPages = Math.ceil(data.length / 10)
 
@@ -88,7 +87,7 @@ export function Table({data, onDelete, children,
                 <Link
                   className="p-1 rounded-sm bg-green-600 text-xs
                   font-bold text-gray-200 hover:bg-green-700"
-                  to={`${pathDetails}/${d.id}`}
+                  to={`details/${d.id}`}
                 >
                   <Eye width={16}/>
                 </Link>

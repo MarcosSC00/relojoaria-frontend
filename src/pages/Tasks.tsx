@@ -45,15 +45,19 @@ export function Tasks(){
 };
 
   const handleDeleteTask = async (id: number) => {
+    const confirmed = window.confirm("Tem certeza que deseja deletar este serviço?");
+  
+    if (!confirmed) return;
+
     try {
       await deleteTask(id);
       setTasks((prev) => prev.filter(p => p.id !== id));
-      toast.success("Serviço deletado com sucesso!")
+      toast.success("Serviço deletado com sucesso!");
     } catch (error) {
       console.error(error);
-      toast.error("Erro ao deletar serviço.")
+      toast.error("Erro ao deletar serviço.");
     }
-  }
+  };
 
   const handleUpdateStatus = async (id: number, status: string) => {
     try{
@@ -120,7 +124,6 @@ export function Tasks(){
             onEdit={handleEdit}
             headElements={["ID", "TÍTULO", "Cliente", "DATA DE CRIAÇÃO", "Valor", "status", "ações"]}
             columns={columns}
-            pathDetails={`details`}
           >
             <Modal
               open={isEditOpen}

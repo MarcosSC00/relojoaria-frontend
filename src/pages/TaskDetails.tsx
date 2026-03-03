@@ -1,8 +1,8 @@
 import { Calendar, PencilIcon, Trash } from "lucide-react";
 import { Header } from "../components/header";
 import type { TaskResponse } from "../types/task";
-import { useParams } from "react-router";
-import { getTaskById } from "../services/taskservice";
+import { useNavigate, useParams } from "react-router";
+import { deleteTask, getTaskById } from "../services/taskservice";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { coinFormater } from "../utils/coinFormater";
@@ -17,6 +17,7 @@ export function TaskDetails() {
     const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const {taskId} = useParams();
+    const navigate = useNavigate();
     const loadTask = async (taskId: number) => {
         try {
             setIsLoading(true)
@@ -31,49 +32,43 @@ export function TaskDetails() {
         }
     }
 
+    const handleEdit = () => {
+        setIsEditOpen(true);
+    }
+    const handleDeleteTask = async (id: number) => {
+        const confirmed = window.confirm("Tem certeza que deseja deletar este serviço?");
+      
+        if (!confirmed) return;
+    
+        try {
+          await deleteTask(id);
+          toast.success("Serviço deletado com sucesso!");
+          navigate("/services", {replace: true});
+        } catch (error) {
+          console.error(error);
+          toast.error("Erro ao deletar serviço.");
+        }
+      };
+
+      
     useEffect(() => {
         if(taskId)
             loadTask(parseInt(taskId));
     },[taskId]);
-
-
-    const handleEdit = () => {
-        setIsEditOpen(true);
-    }
-    const handleDeleteTask = () => {
-        toast(
-            <div className="w-auto focus: h-30 flex flex-col justify-between m-auto">
-                <span className="text-xl">Deseja realmente excluir esse serviço?</span>
-                <div className="flex items-center gap-2">
-                    <button 
-                        className="flex items-center gap-1 py-1 px-4
-                        bg-blue-900 rounded-md text-gray-200 hover:bg-blue-950">
-                        <span className="font-semibold text-sm">Cancelar</span>
-                        <PencilIcon size={18} />
-                    </button>
-                    <button
-                        onClick={() => toast.dismiss()} 
-                        className="flex items-center gap-1 py-1 px-4
-                        bg-red-500 rounded-md text-gray-200 hover:bg-red-600"
-                    >
-                        <span className="font-semibold text-sm">Excluir</span>
-                        <Trash size={18} />
-                    </button>
-                </div>
-            </div>
-        ,
-        {id: "deleteConfirm", position:"top-center", duration:10000 }
-      );
-    }
     return(
         <div className="flex flex-col min-h-screen bg-gray-100">
             <Header title="Relojoaria Digital"/>
             {task && !isLoading ? (
                 <div className="flex flex-col w-[80%] md:w-[600px] gap-4 
             text-blue-950 rounded-md shadow-md bg-gray-50 mx-auto mt-10 p-5">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center gap-2.5">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-xl font-bold capitalize">{task.title}</h2>
+                        <h2 className="text-xl font-bold capitalize">
+                            <span className="mr-2 p-0.5 rounded-sm bg-green-200">
+                                {`#${task.id}`}
+                            </span>
+                            {task.title}
+                        </h2>
                         <div className="flex gap-2 items-center bg-green-200 p-1 rounded-md">
                             <Calendar size={16}/>
                             <span className="text-xs font-bold">{formatDate(task.createdAt)}</span>
@@ -188,7 +183,7 @@ export function TaskDetails() {
                             <button 
                                 className="flex items-center gap-1 py-1 px-4
                               bg-red-500 rounded-md text-gray-200 hover:bg-red-600"
-                                onClick={handleDeleteTask}
+                                onClick={() => handleDeleteTask(task.id)}
                             >
                                 <span className="font-semibold text-sm">Excluir</span>
                                 <Trash size={18} />

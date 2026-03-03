@@ -28,6 +28,10 @@ export function Clients() {
   }
 
   const handleDeleteClient = async (id: number) => {
+    const confirmed = window.confirm("Deseja realmente deletar esse cliente?");
+    if(!confirmed){
+      return;
+    }
     try {
       await deleteClient(id);
       setClients((prev) => prev.filter(c => c.id !== id));
