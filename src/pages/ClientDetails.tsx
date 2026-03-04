@@ -1,17 +1,18 @@
 import { Calendar, PencilIcon, Trash } from "lucide-react";
 import { Header } from "../components/header";
 import { useEffect, useState } from "react";
-import type { Client } from "../types/client";
+import type { ClientWithServices } from "../types/client";
 import { toast } from "sonner";
 import { useNavigate ,useParams } from "react-router";
-import { deleteClient, getClientById } from "../services/clientservice";
+import { deleteClient, getClientWithServices } from "../services/clientservice";
 import { formatDate } from "../utils/dateFormater";
 import { CreateClient } from "../components/forms/createclient";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Modal } from "../components/modal";
+import { coinFormater } from "../utils/coinFormater";
 
 export function  ClientDetails() {
-    const [client, setClient] = useState<Client>();
+    const [client, setClient] = useState<ClientWithServices>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
     const {clientId} = useParams();
@@ -20,7 +21,7 @@ export function  ClientDetails() {
     const loadClient = async (id: number) => {
         setIsLoading(true);
         try {
-            const result = await getClientById(id);
+            const result = await getClientWithServices(id);
             setClient(result);
         } catch (error) {
             toast.error("Erro ao carregar cliente.", {id:"loadClientError"});
@@ -77,7 +78,8 @@ export function  ClientDetails() {
                     <div className="flex items-center gap-2 font-semibold">
                         <h6>Valor em serviços:</h6>
                         <span className="py-1 px-2 rounded-sm bg-green-200 font-bold">
-                            {/*{coinFormater(task.totalPrice ?? 0)}*/}
+                            {coinFormater(client.services.reduce((acc, cur) => acc + cur.amountService
+                        ,0) ?? 0)}
                         </span>
                     </div>
                 </div>
@@ -88,30 +90,30 @@ export function  ClientDetails() {
                 <div className="flex flex-col">
                     <h4 className="text-md font-bold">Serviços:</h4>
                     <div className="">
-                        {/*{task.subServices && task.subServices.length >= 1? (
+                        {client.services && client.services.length >= 1? (
                             <table className="mt-2 w-full text-sm overflow-auto">
                             <thead>
                                 <tr className="bg-gray-300">
-                                    <th>Titulo</th>
-                                    <th>Descrição</th>
+                                    <th>Id</th>
+                                    <th>Título</th>
                                     <th>Valor</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {task.subServices.map((s, index) => (
+                                {client.services.map((s, index) => (
                                     <tr className="text-center border-b border-gray-200" key={index}>
-                                        <td className="truncate py-1">{s.title}</td>
-                                        <td className="truncate">{s.description}</td>
-                                        <td>{coinFormater(s.price)}</td>
+                                        <td className="truncate py-1">{s.id}</td>
+                                        <td className="truncate">{s.title}</td>
+                                        <td>{coinFormater(s.amountService)}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                         ) : (
                             <span className="text-xs text-red-500">
-                                Não possui subserviços.
+                                Não possui serviços.
                             </span>
-                        )}*/}
+                        )}
                         <div className="flex items-center gap-2 justify-end mt-5">
                             <button 
                                 onClick={handleEdit}

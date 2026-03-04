@@ -2,7 +2,7 @@ import { CheckCircle } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
-import type { Client } from "../../types/client";
+import type { Client, ClientWithServices } from "../../types/client";
 import { createClient, updateClient } from "../../services/clientservice";
 
 interface CreateClientInupts {
@@ -13,7 +13,7 @@ interface CreateClientInupts {
 
 interface CreateClientProps {
   children: ReactNode;
-  loadedClient?: Client
+  loadedClient?: Client | ClientWithServices;
   onLoading?: (loading: boolean) => void;
   openModal?: () => void;
   onSuccess?: ()=> Promise<void>,
@@ -56,7 +56,7 @@ export function CreateClient({
         <div className="flex gap-2 items-center">
           <CheckCircle className="h-5 w-5 text-[#031D3B]" />
           <div className="flex flex-col">
-            <span className="font-medium">Cliente cadastrado!</span>
+            <span className="font-medium">Cliente atualizado!</span>
             <span className="text-xs text-gray-500">
               Nome: {result.name}
             </span>

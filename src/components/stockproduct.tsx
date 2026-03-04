@@ -3,10 +3,7 @@ import type { TaskCustom } from "../types/task"
 import { coinFormater } from "../utils/coinFormater";
 import { CreateStock } from "./forms/createstock";
 import { Modal } from "./modal";
-import * as Dialog from "@radix-ui/react-dialog"
-import { updateStock } from "../services/stockservice";
-import type { StockRequest } from "../types/stock";
-import { toast } from "sonner";
+import * as Dialog from "@radix-ui/react-dialog";
 
 interface StockProductProps {
     tasks: TaskCustom[];
@@ -64,7 +61,8 @@ export function StockProduct({
             </div>
             <div className="my-4 p-1">
                 <h4 className="text-sm font-semibold">Serviços:</h4>
-                <div className="w-full max-h-[109px] border-b border-t
+                {tasks && tasks.length >=1 ? (
+                    <div className="w-full max-h-[109px] border-b border-t
                 border-gray-200 overflow-y-scroll">
                     <div className="grid grid-cols-[auto_1fr_1fr_1fr] text-center border-b border-gray-200
                     bg-blue-900 px-4 text-gray-200">
@@ -82,6 +80,9 @@ export function StockProduct({
                         </div>
                     )): <h4>Nenhuma tarefa relacionada.</h4>}
                 </div>
+                ) : <span className="text-xs text-red-500">
+                        Não possui serviços.
+                    </span>}
             </div>
             <Modal tiltle="Atualização de estoque" 
                 open={isOpen} 

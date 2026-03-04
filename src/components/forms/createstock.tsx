@@ -26,20 +26,20 @@ export function CreateStock({ children, onLoading, onSuccess, openModal, isUpdat
   const [error, setError] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<CreatStockInputs> = async (data: StockRequest) => {
-    var result;
     try {
       onLoading?.(true);
       if(isUpdate && loadedStock){
-         result = await updateStock(data);
+         await updateStock(data);
          onSuccess?.();
-         toast.success("Estoque atualizado com sucesso.")
+         toast.success("Estoque atualizado com sucesso.", {id:"stockUpateSuccess"})
       }else {
         await createStock(data);
         onSuccess?.();
-        toast.success("Estoque cadastrado com sucesso.")
+        toast.success("Estoque cadastrado com sucesso.", {id:"stockCreateSuccess"})
       }
     }catch (error) {
-      setError("erro ao cadastrar estoque");
+      setError("erro ao cadastrar estoque",);
+      toast.error("Erro ao cadastrar estoque.", {id:"stockCreateError"})
       console.error("erro ao cadastrar estoque", error);
     }finally{
       onLoading?.(false);
@@ -60,12 +60,12 @@ export function CreateStock({ children, onLoading, onSuccess, openModal, isUpdat
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-full overflow-y-auto"
       >
-        <label htmlFor="productname" className="font-semibold text-sm">
+        <label htmlFor="productName" className="font-semibold text-sm">
           Nome do produto:
         </label>
         <input
           type="text"
-          id="prductname"
+          id="productName"
           className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
           {...register("productName", {
             required: "Informe o nome do produto",
@@ -77,12 +77,12 @@ export function CreateStock({ children, onLoading, onSuccess, openModal, isUpdat
             {errors.productName.message}
           </span>
         )}
-        <label htmlFor="quantidade" className="font-semibold text-sm mt-4">
+        <label htmlFor="quantity" className="font-semibold text-sm mt-4">
           Quantidade:
         </label>
         <input
           type="number"
-          id="quantidade"
+          id="quantity"
           className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
           {...register("quantity", {
             required: "Informe a quantidade",

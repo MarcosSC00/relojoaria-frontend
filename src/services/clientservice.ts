@@ -1,5 +1,5 @@
 import { api } from "../api/api";
-import type { Client } from "../types/client";
+import type { Client, ClientWithServices } from "../types/client";
 
 export async function createClient(
     name: string,
@@ -36,5 +36,10 @@ export async function deleteClient(id: number): Promise<void> {
 
 export async function getAllClientNames(): Promise<String[]> {
     const response = await api.get("api/clients/get-all-names");
+    return response.data;
+}
+
+export async function getClientWithServices(id: number): Promise<ClientWithServices> {
+    const response = await api.get(`api/clients/get-clients-with-services/${id}`);
     return response.data;
 }
