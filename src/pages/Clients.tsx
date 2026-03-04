@@ -84,48 +84,50 @@ export function Clients() {
               <Loading/>
             </div>
           ):(
-            <Table 
-            data={clients ?? []} 
-            onDelete={handleDeleteClient} 
-            onReaload={loadClients}
-            onEdit={handleEdit}
-            headElements={["Id", "NOME", "TELEFONE", "DATA DE CRIAÇÃO", "AÇÕES"]}
-            columns={columns}
-          >
-            <Modal
-              open={isEditOpen}
-              setOpen={setIsEditOpen}
-              tiltle="Editar Cliente"
-              trigger={<></>}
-            >
-              {isEditOpen && selectedEntity && ( 
-                <CreateClient 
-                  loadedClient={selectedEntity} 
-                  isUpdate={true}
-                  openModal={() => setIsEditOpen(false)}
-                  onSuccess={loadClients}
-                >
-                  <div className="flex justify-end gap-2 mt-5">
-                  <Dialog.Close
-                    className="p-1 border border-gray-300 rounded-md text-[#031D3B] font-semibold
-                  hover:bg-gray-200 transition-colors duration-150
-                    hover:cursor-pointer text-sm"
+            <div className="overflow-auto">
+              <Table 
+                data={clients ?? []} 
+                onDelete={handleDeleteClient} 
+                onReaload={loadClients}
+                onEdit={handleEdit}
+                headElements={["Id", "NOME", "TELEFONE", "DATA DE CRIAÇÃO", "AÇÕES"]}
+                columns={columns}
+              >
+              <Modal
+                open={isEditOpen}
+                setOpen={setIsEditOpen}
+                tiltle="Editar Cliente"
+                trigger={<></>}
+              >
+                {isEditOpen && selectedEntity && ( 
+                  <CreateClient 
+                    loadedClient={selectedEntity} 
+                    isUpdate={true}
+                    openModal={() => setIsEditOpen(false)}
+                    onSuccess={loadClients}
                   >
-                    CANCELAR
-                  </Dialog.Close>
-                  <button
-                    type="submit"
-                    className="p-1 bg-[#031D3B] border border-[#031D3B] rounded-md text-gray-50 font-semibold
-                  hover:bg-[#020F1F] transition-colors duration-150
-                    hover:cursor-pointer text-sm"
-                  >
-                    SALVAR
-                  </button>
-                </div>
-              </CreateClient>
-              )}
-            </Modal>
-          </Table>
+                    <div className="flex justify-end gap-2 mt-5">
+                    <Dialog.Close
+                      className="p-1 border border-gray-300 rounded-md text-[#031D3B] font-semibold
+                    hover:bg-gray-200 transition-colors duration-150
+                      hover:cursor-pointer text-sm"
+                    >
+                      CANCELAR
+                    </Dialog.Close>
+                    <button
+                      type="submit"
+                      className="p-1 bg-[#031D3B] border border-[#031D3B] rounded-md text-gray-50 font-semibold
+                    hover:bg-[#020F1F] transition-colors duration-150
+                      hover:cursor-pointer text-sm"
+                    >
+                      SALVAR
+                    </button>
+                  </div>
+                </CreateClient>
+                )}
+                </Modal>
+              </Table>
+            </div>
           )}
         </div>
       }

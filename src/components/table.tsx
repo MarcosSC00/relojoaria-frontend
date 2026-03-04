@@ -47,9 +47,9 @@ export function Table({data, onDelete, children,
 
   return (
     <>
-    <table className="w-full text-sm overflow-auto">
+    <table className="w-full text-sm">
       <thead>
-        <tr className="border-b text-xs border-gray-300 uppercase bg-slate-200">
+        <tr className="border-b text-xs border-gray-300 uppercase bg-slate-200 text-nowrap">
           {headElements.map((h, index) => 
             index == 0 ?
               <th className="px-4 py-3 text-left" key={index}>{h}</th> :

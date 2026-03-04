@@ -127,48 +127,50 @@ export function Tasks(){
               <Loading/>
             </div>
           ):(
-            <Table 
-            data={tasks ?? []} 
-            onDelete={handleDeleteTask} 
-            onReaload={loadTasks}
-            onEdit={handleEdit}
-            headElements={["ID", "TÍTULO", "Cliente", "DATA DE CRIAÇÃO", "Valor", "status", "ações"]}
-            columns={columns}
-          >
-            <Modal
-              open={isEditOpen}
-              setOpen={setIsEditOpen}
-              tiltle="Editar Cliente"
-              trigger={<></>}
-            >
-              {isEditOpen && selectedEntity && ( 
-                <CreateTask 
-                  loadedTask={selectedEntity} 
-                  isUpdate={true}
-                  openModal={() => setIsEditOpen(false)}
-                  onSuccess={loadTasks}
+            <div className="overflow-auto">
+              <Table 
+                data={tasks ?? []} 
+                onDelete={handleDeleteTask} 
+                onReaload={loadTasks}
+                onEdit={handleEdit}
+                headElements={["ID", "TÍTULO", "Cliente", "DATA DE CRIAÇÃO", "Valor", "status", "ações"]}
+                columns={columns}
+              >
+                <Modal
+                  open={isEditOpen}
+                  setOpen={setIsEditOpen}
+                  tiltle="Editar Cliente"
+                  trigger={<></>}
                 >
-                  <div className="flex justify-end gap-2 mt-5">
-                    <Dialog.Close
-                      className="p-1 border border-gray-300 rounded-md text-[#031D3B] font-semibold
-                    hover:bg-gray-200 transition-colors duration-150
-                      hover:cursor-pointer text-sm"
+                  {isEditOpen && selectedEntity && ( 
+                    <CreateTask 
+                      loadedTask={selectedEntity} 
+                      isUpdate={true}
+                      openModal={() => setIsEditOpen(false)}
+                      onSuccess={loadTasks}
                     >
-                      CANCELAR
-                    </Dialog.Close>
-                    <button
-                      type="submit"
-                      className="p-1 bg-[#031D3B] border border-[#031D3B] rounded-md text-gray-50 font-semibold
-                    hover:bg-[#020F1F] transition-colors duration-150
-                      hover:cursor-pointer text-sm"
-                    >
-                      SALVAR
-                    </button>
-                  </div>
-              </CreateTask>
-              )}
-            </Modal>
-          </Table>
+                      <div className="flex justify-end gap-2 mt-5">
+                      <Dialog.Close
+                        className="p-1 border border-gray-300 rounded-md text-[#031D3B] font-semibold
+                      hover:bg-gray-200 transition-colors duration-150
+                        hover:cursor-pointer text-sm"
+                      >
+                        CANCELAR
+                      </Dialog.Close>
+                      <button
+                        type="submit"
+                        className="p-1 bg-[#031D3B] border border-[#031D3B] rounded-md text-gray-50 font-semibold
+                      hover:bg-[#020F1F] transition-colors duration-150
+                        hover:cursor-pointer text-sm"
+                      >
+                        SALVAR
+                      </button>
+                    </div>
+                  </CreateTask>
+                )}
+              </Modal>
+            </Table>
+            </div>
           )}
         </div>
       }

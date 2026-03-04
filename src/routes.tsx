@@ -8,6 +8,7 @@ import { Tasks } from "./pages/Tasks";
 import { Stock } from "./pages/Stock";
 import { TaskDetails } from "./pages/TaskDetails";
 import { ClientDetails } from "./pages/ClientDetails";
+import { NotFound } from "./pages/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +67,12 @@ export const router = createBrowserRouter([
       <ProtectedRoute requiredProfile="ADMIN">
         <Stock />
       </ProtectedRoute>
+    )
+  },
+  {
+    path: "*",
+    element:(
+      <NotFound/>
     )
   }
 ]);
