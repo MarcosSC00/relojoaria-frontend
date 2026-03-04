@@ -55,7 +55,7 @@ export function CircularProgress({value, size=165, strokeWidth=10}: CircularProg
                         "--circle-length": circumference,
                         "--progress-offset": progressOffset
                        } as React.CSSProperties}
-                       className="{transition-all animate-[loader-progress_1s_ease-in-out]"
+                       className="transition-all animate-[loader-progress_1s_ease-in-out]"
                     />
                 </svg>
 

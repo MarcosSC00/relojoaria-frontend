@@ -12,16 +12,19 @@ import { getProductAnalysis } from "../services/productservice";
 import { type TaskCustom } from "../types/task";
 import { coinFormater } from "../utils/coinFormater";
 import { type ProductAnalysis } from "../types/product-analysis";
+import { Loading } from "../components/loading";
 
 export function Stock(){
   const [tasks, setTasks] = useState<TaskCustom[]>([]);
   const [productAnalysis, setProductsAnalysis] = useState<ProductAnalysis>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const {productName} = useParams<{productName: string}>();
 
   const loadStock = async (productName: string) =>{
     try {
+      setIsLoading(true);
       const customTask = await getCustomTasks(productName);
       const productAnalysis = await getProductAnalysis(productName);
       setTasks(customTask);
@@ -31,6 +34,8 @@ export function Stock(){
         toast.error("Erro ao carregar estoque", {
           id: "load-stock-error"
         });
+      }finally{
+        setIsLoading(false);
       }
   }
 
@@ -46,7 +51,12 @@ export function Stock(){
       componentsChildren={
         <div className="w-full px-6 pb-2 grid md:grid-cols-2 gap-2">
           <div className="bg-white rounded-md shadow-md border border-gray-200">
-            {productAnalysis ? (
+            {isLoading ? (
+              <div className="w-full h-full flex justify-center">
+                <Loading/>
+              </div>
+            ):(
+              productAnalysis ? (
               <StockProduct
                 onSuccess={() => loadStock(productName ?? '')}
                 tasks={tasks}
@@ -62,12 +72,18 @@ export function Stock(){
                   {`Produto não possui estoque.`}
                 </h4>
               </div>
+            )
             )}
           </div>
           <div className="flex flex-col bg-white rounded-md shadow-md border border-gray-200
           py-4 px-8 items-start gap-5">
             <h4 className="text-md font-semibold">Detalhes de  uso</h4>
-            <div className="flex flex-col items-start md:flex md:flex-row md:items-center gap-5 w-full">
+            {isLoading ? (
+              <div className="w-full h-full flex justify-center">
+                <Loading/>
+              </div>
+            ):(
+              <div className="flex flex-col items-start md:flex md:flex-row md:items-center gap-5 w-full">
               <CircularProgress value={
                 productAnalysis ? (
                   Math.round((productAnalysis.totalProductUsed*100)/(productAnalysis.currentProductQtd))
@@ -103,6 +119,7 @@ export function Stock(){
                 </div>
               </div>
             </div>
+            )}
           </div>
         </div>}
     >

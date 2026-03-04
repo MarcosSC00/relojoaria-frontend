@@ -7,19 +7,24 @@ import { ProductCard } from "../components/productcard";
 import type { ProductResponse, } from "../types/product";
 import { toast } from "sonner";
 import { deleteProduct, getProducts } from "../services/productservice";
+import { Loading } from "../components/loading";
 
 export function Product() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
+  const [isLoading, setIsLoding] = useState(false);
   const [products, setProducts] = useState<ProductResponse[]>([]);
 
   const loadProducts = async () => {
     try {
+      setIsLoding(true);
       const result = await getProducts();
       setProducts(result);
     } catch (error) {
       toast.error("Erro ao carregar produtos.");
       console.error(error);
+    }finally{
+      setIsLoding(false);
     }
   }
 
@@ -52,7 +57,12 @@ export function Product() {
               <h4 className="text-blue-950 font-bold text-center">Unidade</h4>
               <h4 className="text-blue-950 font-bold text-end">Ações</h4>
             </div>
-            {products.map((p) => (
+            {isLoading ? (
+              <div className="w-full flex justify-center py-10">
+                <Loading/>
+              </div>
+            ):(
+              products.map((p) => (
               <ProductCard 
                 id={p.id}
                 name={p.name}
@@ -63,7 +73,8 @@ export function Product() {
                 onReaload={loadProducts}
                 isSubmiting={isSubmiting}
               />
-            ))}
+            ))
+            )}
           </div>
           <div className="flex flex-col items-center md:col-span-1 rounded-md shadow-sm bg-white border-gray-100">
             <h4 className="text-md font-bold my-2 text-blue-950">Consumo</h4>

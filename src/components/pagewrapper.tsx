@@ -20,10 +20,12 @@ export function PageWrapper({
     <div className="min-h-screen">
       <Header title={headerTitle} />
       <Navigation />
-      <div className="px-6 py-8 space-y-8">
+      <div className="max-w-[1440px] w-full px-6 py-8 space-y-8 mx-auto">
         <HeaderSection title={sessionTitle}>{children}</HeaderSection>
       </div>
-      {componentsChildren}
+      <div className="max-w-[1440px] w-full mx-auto">
+        {componentsChildren}
+      </div>
     </div>
   );
 }

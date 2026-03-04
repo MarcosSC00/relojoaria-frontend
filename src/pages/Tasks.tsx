@@ -11,21 +11,26 @@ import type { TableColumn } from "../types/tablecolumn";
 import { formatDate } from "../utils/dateFormater";
 import { coinFormater } from "../utils/coinFormater";
 import { statusConversor,revertStatusConversor } from "../utils/statusConversor";
+import { Loading } from "../components/loading";
 
 export function Tasks(){
   const [tasks, setTasks] = useState<TaskResponse[]>([])
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState<any | null>(null);
 
   const loadTasks = async () => {
     try{
+      setIsLoading(true);
       const response = await getAllTasks();
       setTasks(response)
     }catch(error){
       console.error(error)
       toast.error("Erro ao buscar clientes.")
+    }finally{
+      setIsLoading(false);
     }
   }
 
@@ -117,7 +122,12 @@ export function Tasks(){
       sessionTitle="Serviços"
       componentsChildren={
         <div className="w-full max-h-screen px-6 py-8">
-          <Table 
+          {isLoading ? (
+            <div className="w-full flex justify-center">
+              <Loading/>
+            </div>
+          ):(
+            <Table 
             data={tasks ?? []} 
             onDelete={handleDeleteTask} 
             onReaload={loadTasks}
@@ -159,6 +169,7 @@ export function Tasks(){
               )}
             </Modal>
           </Table>
+          )}
         </div>
       }
     >

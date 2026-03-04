@@ -9,21 +9,27 @@ import { deleteClient, getClients } from "../services/clientservice";
 import { toast } from "sonner";
 import type { TableColumn } from "../types/tablecolumn";
 import { formatDate } from "../utils/dateFormater";
+import { Loading } from "../components/loading";
 
 export function Clients() {
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [selectedEntity, setSelectedEntity] = useState<any | null>(null);
 
   const loadClients = async () => {
     try{
+      setIsLoading(true);
       const response = await getClients();
       setClients(response)
     }catch(error){
       console.error(error)
       toast.error("Erro ao buscar clientes.")
+    }
+    finally{
+      setIsLoading(false);
     }
   }
 
@@ -73,7 +79,12 @@ export function Clients() {
       sessionTitle="Clientes"
       componentsChildren={
         <div className="w-full px-6 py-8">
-          <Table 
+          {isloading ? (
+            <div className="w-full flex justify-center">
+              <Loading/>
+            </div>
+          ):(
+            <Table 
             data={clients ?? []} 
             onDelete={handleDeleteClient} 
             onReaload={loadClients}
@@ -115,6 +126,7 @@ export function Clients() {
               )}
             </Modal>
           </Table>
+          )}
         </div>
       }
     >
