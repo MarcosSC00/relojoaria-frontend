@@ -10,3 +10,8 @@ export interface ProductResponse {
   unit: string;
   price: number;
 }
+
+export interface ProductDataChart {
+  name: string;
+  quantity: number;
+}

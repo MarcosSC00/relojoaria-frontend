@@ -1,9 +1,9 @@
 import { Award, DollarSign, Target, Users } from "lucide-react";
 import { Card } from "../components/ui/Card";
-import { Outlet } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import { Header } from "../components/header";
 import { Navigation } from "../components/navigation";
+import { Footer } from "../components/footer";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("pt-BR", {
@@ -22,7 +22,7 @@ export function Dashboard() {
       {/* Header Section */}
       <Header title="Dashboard" username={userAuth?.username} />
       <Navigation />
-      <div className="px-6 py-8 space-y-8">
+      <div className="px-6 py-8 space-y-8 min-h-screen">
         {/* Key Performance Indicators */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Total Revenue */}
@@ -121,7 +121,7 @@ export function Dashboard() {
           </Card>
         </div>
       </div>
-      <Outlet />
+      <Footer/>
     </div>
   );
 }

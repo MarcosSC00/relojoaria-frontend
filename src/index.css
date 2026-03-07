@@ -1,4 +1,7 @@
 @import "tailwindcss";
+* {
+  outline: none;
+}
 li::after {
   content: "";
   display: flex;
@@ -18,7 +21,6 @@ button {
 button:disabled{
   cursor: not-allowed;
 }
-
 @keyframes loader-progress {
   from {
     stroke-dashoffset: var(--circle-length);

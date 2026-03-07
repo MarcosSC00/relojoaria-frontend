@@ -22,7 +22,9 @@ export function ProductCard({id, name, price, unit, onDelete, onReaload, isSubmi
     }
     return(
         <>
-        <div className="grid grid-cols-[40px_1fr_1fr_1fr_1fr] px-5 py-4 border-b border-gray-200 items-center justify-between">
+        <div className="grid grid-cols-[40px_100px_100px_80px_60px] 
+        md:grid-cols-[40px_1fr_1fr_1fr_1fr] px-5 py-4 border-b 
+        border-gray-200 items-center justify-between">
             <h6 className="text-sm text-slate-800 font-semibold text-left px-2
             rounded-md bg-slate-400/60 w-fit">
                 {id}
@@ -30,7 +32,7 @@ export function ProductCard({id, name, price, unit, onDelete, onReaload, isSubmi
             <h6 className="text-[18px] text-slate-800 font-bold relative text-center">
                 <Link to={`/stock/${name}`}>{name}</Link>
             </h6>
-            <h6 className="text-sm text-slate-800 font-bold text-center px-4
+            <h6 className="text-sm text-slate-800 font-bold text-center
             rounded-md bg-green-400/60 w-[100px] justify-self-center">
                 {`R$ ${price}`}
             </h6>

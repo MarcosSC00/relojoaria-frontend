@@ -36,8 +36,7 @@ export function CreateTask({
       status: "TODO", 
       items: [
         {productName: "", quantityUsed: null}
-      ], 
-      subServices: [{title: "", description: "", price: null}]}
+      ]}
   });
   const {fields, append, remove} = useFieldArray({
     control,
@@ -101,6 +100,13 @@ export function CreateTask({
   }, [loadedTask, clientnames, reset]);
 
   const onSubmit: SubmitHandler<TaskRequest> = async (data: TaskRequest) => {
+    if (data.subServices?.length) {
+    const validSubServices = data.subServices.filter(
+      s => s.title || s.description || s.price
+    );
+
+    data.subServices = validSubServices.length ? validSubServices : null;
+  }
     try {
       onLoading?.(true);
       if(!isUpdate){

@@ -19,7 +19,7 @@ export function PageWrapper({
 }: PageWrapperProps) {
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="flex-1">
+      <div className="flex-1 min-h-screen">
         <Header title={headerTitle} />
         <Navigation />
         <div className="max-w-[1440px] w-full px-6 py-8 space-y-8 mx-auto">

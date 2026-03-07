@@ -63,7 +63,7 @@ export function StockProduct({
                 <h4 className="text-sm font-semibold">Serviços:</h4>
                 {tasks && tasks.length >=1 ? (
                     <div className="w-full max-h-[109px] border-b border-t
-                border-gray-200 overflow-y-scroll">
+                border-gray-200 overflow-auto">
                     <div className="grid grid-cols-[auto_1fr_1fr_1fr] text-center border-b border-gray-200
                     bg-blue-900 px-4 text-gray-200">
                         <span className="text-sm font-semibold px-2">Id</span>

@@ -1,5 +1,5 @@
 import { api } from "../api/api";
-import type { ProductRequest, ProductResponse } from "../types/product";
+import type { ProductDataChart, ProductRequest, ProductResponse } from "../types/product";
 import type { ProductAnalysis } from "../types/product-analysis";
 
 export async function createProduct(data: ProductRequest): Promise<ProductResponse> {
@@ -32,5 +32,10 @@ export async function getProductAnalysis(productName: string): Promise<ProductAn
 
 export async function getJustNameProducts(): Promise<any[]> {
   const response = await api.get(`api/product/get-just-name`);
+  return response.data;
+}
+
+export async function getProductDataChart(): Promise<ProductDataChart[]> {
+  const response = await api.get("api/product/get-data-chart");
   return response.data;
 }

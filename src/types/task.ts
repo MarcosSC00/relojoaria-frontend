@@ -10,7 +10,7 @@ export interface TaskRequest {
     type: string;
     items: MaterialUsageRequest[];
     endDate: string;
-    subServices: SubTaskRequest[];
+    subServices: SubTaskRequest[] | null;
 }
 
 export interface TaskResponse {

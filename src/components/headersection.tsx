@@ -16,11 +16,13 @@ export function HeaderSection({ title, children }: HeaderSectionProps) {
         <h2 className="text-gray-800 font-bold text-xl">{title}</h2>
         {children}
       </div>
-      <div className="flex items-center border border-gray-200 rounded-sm  bg-gray-100">
+      <div className="flex items-center border border-gray-200 rounded-sm  
+       min-w-0 bg-gray-100">
         <input
+          id="search"
           type="text"
           placeholder="pesquisar..."
-          className="outline-none px-1 text-gray-700"
+          className="outline-none text-xs px-1 text-gray-700 w-full"
         />
         <button className="p-2 bg-[#031D3B] rounded-e-sm">
           <Search size={16} className="text-gray-50" />
