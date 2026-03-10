@@ -71,25 +71,25 @@ export function Table({data, onDelete, children,
               <div className="flex gap-2 justify-center">
                 
                 <button
-                  className="p-1 rounded-sm bg-blue-500 text-xs 
-                  font-bold text-gray-100 hover:bg-blue-600"
+                  className=" rounded-sm text-xs 
+                  font-bold text-blue-500"
                   onClick={() => handleEdit(d)}
                 >
-                  <Pen width={16}/>
+                  <Pen width={14}/>
                 </button>
                 <button
-                  className="p-1 rounded-sm bg-red-500 text-xs
-                  font-bold text-gray-100 hover:bg-red-600"
+                  className=" rounded-sm text-xs
+                  font-bold text-red-500"
                   onClick={() => onDelete(d.id)}
                 >
-                  <Trash2 width={16}/>
+                  <Trash2 width={14}/>
                 </button>
                 <Link
-                  className="p-1 rounded-sm bg-green-600 text-xs
-                  font-bold text-gray-200 hover:bg-green-700"
+                  className=" rounded-sm text-xs
+                  font-bold text-green-500"
                   to={`details/${d.id}`}
                 >
-                  <Eye width={16}/>
+                  <Eye width={14}/>
                 </Link>
               </div>
             </td>
@@ -98,11 +98,11 @@ export function Table({data, onDelete, children,
       </tbody>
       <tfoot>
         <tr>
-          <td colSpan={headElements.length - 1} className="text-gray-400 py-2">
+          <td colSpan={headElements.length - 2} className="text-gray-400 py-2">
             <span className="ml-3">página {page} de {totalPages}</span>
           </td>
-          <td colSpan={1} className="text-gray-400">
-            <div className="text-center">
+          <td colSpan={2} className="text-gray-400">
+            <div className="text-right">
               <button 
                 className="hover:text-gray-600" 
                 onClick={goToFirstPage}

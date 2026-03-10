@@ -1,4 +1,4 @@
-import type { TaskCustom } from "./task";
+import type { ClientTask } from "./task";
 
 export interface Client {
   id: number;
@@ -13,5 +13,5 @@ export interface ClientWithServices {
   name: string;
   phone: string;
   createdAt: string;
-  services: TaskCustom[];
+  services: ClientTask[];
 }

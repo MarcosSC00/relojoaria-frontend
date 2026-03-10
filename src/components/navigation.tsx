@@ -1,10 +1,14 @@
 import { NavLink } from "react-router-dom";
 
 export function Navigation() {
+
   return (
-    <div className="px-6 py-4 w-full bg-white border-b border-gray-200">
+    <div className="px-6 py-4 w-full bg-white border-b 
+    border-gray-200 hidden md:block">
       <nav>
-        <ul className="flex w-full text-right gap-8 text-sm font-semibold text-gray-400">
+        <ul className="flex items-start flex-col md:items-center 
+        md:flex-row md:w-full text-right gap-8 text-sm 
+        font-semibold text-gray-400">
           <li>
             <NavLink 
               to="/dashboard"

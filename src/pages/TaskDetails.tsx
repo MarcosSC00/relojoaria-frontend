@@ -59,12 +59,14 @@ export function TaskDetails() {
         <div className="flex flex-col min-h-screen bg-gray-100">
             <Header title="Relojoaria Digital"/>
             {task && !isLoading ? (
-                <div className="flex flex-col w-[80%] md:w-[600px] gap-4 
-            text-blue-950 rounded-md shadow-md bg-gray-50 mx-auto mt-10 p-5">
-                <div className="flex justify-between items-center gap-2.5">
-                    <div className="flex items-center gap-3">
+                <div className="flex flex-col w-[90%] md:w-[600px] gap-4 
+            text-blue-950 rounded-md shadow-md bg-gray-50 mx-auto mt-10 p-5
+            max-h-[500px] overflow-auto">
+                <div className="flex items-baseline justify-between md:items-center gap-2.5">
+                    <div className="w-full flex items-center justify-between">
                         <h2 className="text-xl font-bold capitalize">
-                            <span className="mr-2 p-0.5 rounded-sm bg-green-200">
+                            <span className="mr-2 p-0.5 rounded-sm bg-green-200
+                            ">
                                 {`#${task.id}`}
                             </span>
                             {task.title}
@@ -74,39 +76,34 @@ export function TaskDetails() {
                             <span className="text-xs font-bold">{formatDate(task.createdAt)}</span>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 font-semibold">
-                        <h6>Valor Total:</h6>
-                        <span className="py-1 px-2 rounded-sm bg-green-200 font-bold">
-                            {coinFormater(task.totalPrice ?? 0)}
-                        </span>
-                    </div>
                 </div>
                 <div className="flex flex-col gap-1">
-                    <h4 className="text-md font-bold">Descrição:</h4>
+                    <h4 className="text-sm font-bold">Descrição:</h4>
                     <p className="border border-blue-900/20 rounded-sm p-1 text-slate-600">{task.description}</p>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between 
+                gap-x-5 md:gap-0">
                     <div className="flex items-baseline gap-1">
-                        <h4 className="text-md font-bold">Cliente:</h4>
+                        <h4 className="text-sm font-bold">Cliente:</h4>
                         <span className="capitalize font-medium text-slate-500">{task.clientName}</span>
                     </div>
                     <div className="flex items-baseline gap-1">
-                        <h4 className="text-md font-bold">Status:</h4>
+                        <h4 className="text-sm font-bold">Status:</h4>
                         <span className="text-sm font-medium text-slate-500 capitalize">{statusConversor(task.status)}</span>
                     </div>
                     <div className="flex items-baseline gap-1">
-                        <h4 className="text-md font-bold">Tipo:</h4>
+                        <h4 className="text-sm font-bold">Tipo:</h4>
                         <span className="text-sm font-medium text-slate-500">{task.type === "SALE" ? "Venda" : "Conserto"}</span>
                     </div>
                     <div className="flex items-baseline gap-1">
-                        <h4 className="text-md font-bold">Entrega:</h4>
+                        <h4 className="text-sm font-bold">Entrega:</h4>
                         <div className="flex gap-2 items-center">
                             <span className="text-sm font-medium text-slate-500">{formatDate(task.endDate)}</span>
                         </div>
                     </div>
                 </div>
                 <div className="flex flex-col gap-1 p-1">
-                    <h4 className="text-md font-bold">Materiais Usados:</h4>
+                    <h4 className="text-sm font-bold">Materiais Usados:</h4>
                     {task.items && task.items.length >= 1 ? (
                         <div className="flex items-center gap-2 flex-wrap">
                             <table className="mt-2 w-full text-sm overflow-auto">
@@ -136,7 +133,7 @@ export function TaskDetails() {
                 </div>
 
                 <div className="flex flex-col">
-                    <h4 className="text-md font-bold">Subserviços:</h4>
+                    <h4 className="text-sm font-bold">Subserviços:</h4>
                     <div className="">
                         {task.subServices && task.subServices.length >= 1? (
                             <table className="mt-2 w-full text-sm overflow-auto">
@@ -163,7 +160,7 @@ export function TaskDetails() {
                             </span>
                         )}
                         <div className="flex items-baseline gap-2 mt-2">
-                            <h4 className="text-md font-bold">Valor adicional:</h4>
+                            <h4 className="text-sm font-bold">Valor adicional:</h4>
                             <div className="flex gap-2 items-center">
                                 <span className="text-sm text-slate-700 font-bold px-2 bg-green-200
                                 rounded-sm">
@@ -171,6 +168,15 @@ export function TaskDetails() {
                                     : coinFormater(0)}
                                 </span>
                             </div>
+                        </div>
+                        
+                        <div className="mt-5 flex items-center gap-2 font-semibold bg-green-200
+                        justify-between px-1 py-1 text-sm">
+                            <h6 className="font-bold">Valor Total:</h6>
+                            <span className="rounded-sm font-bold
+                            ">
+                                {coinFormater(task.totalPrice ?? 0)}
+                            </span>
                         </div>
                         <div className="flex items-center gap-2 justify-end mt-5">
                             <button 

@@ -83,7 +83,7 @@ export function Stock(){
                 <Loading/>
               </div>
             ):(
-              <div className="flex flex-col items-start md:flex md:flex-row md:items-center gap-5 w-full">
+              <div className="flex flex-col items-center md:flex-row md:items-center gap-5 w-full">
               <CircularProgress value={
                 productAnalysis ? (
                   Math.round((productAnalysis.totalProductUsed*100)/(productAnalysis.currentProductQtd))
