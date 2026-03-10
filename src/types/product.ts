@@ -11,7 +11,8 @@ export interface ProductResponse {
   price: number;
 }
 
-export interface ProductDataChart {
+export interface ProductData {
   name: string;
   quantity: number;
+  current_qtd: number;
 }

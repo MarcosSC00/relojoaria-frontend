@@ -4,26 +4,26 @@ import { Modal } from "../components/modal";
 import { PageWrapper } from "../components/pagewrapper";
 import { useEffect, useState } from "react";
 import { ProductCard } from "../components/productcard";
-import { type ProductDataChart, type ProductResponse, } from "../types/product";
+import { type ProductData, type ProductResponse, } from "../types/product";
 import { toast } from "sonner";
-import { deleteProduct, getProductDataChart, getProducts } from "../services/productservice";
+import { deleteProduct, getProductData, getProducts } from "../services/productservice";
 import { Loading } from "../components/loading";
-import { Chart } from "../components/chart";
+import { CircularProgress } from "../components/circularprogress";
 
 export function Product() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
   const [isLoading, setIsLoding] = useState(false);
   const [products, setProducts] = useState<ProductResponse[]>([]);
-  const [dataChart, setDataChart] = useState<ProductDataChart[]>([]);
+  const [dataProduct, setDataProduct] = useState<ProductData[]>([]);
 
   const loadProducts = async () => {
     try {
       setIsLoding(true);
       const result = await getProducts();
-      const dataChart = await getProductDataChart();
+      const dataChart = await getProductData();
       setProducts(result);
-      setDataChart(dataChart)
+      setDataProduct(dataChart)
     } catch (error) {
       toast.error("Erro ao carregar produtos.");
       console.error(error);
@@ -88,8 +88,22 @@ export function Product() {
           </div>
           <div className="flex flex-col items-center md:col-span-1 rounded-md shadow-sm bg-white border-gray-100">
             <h4 className="text-md font-bold my-2 text-blue-950">Consumo</h4>
-            <div className="w-full min-h-[180px] md:h-full">
-              <Chart data={dataChart}/>
+            <div className="flex flex-col w-full h-[180px] md:h-full overflow-auto p-4 gap-5">
+              {dataProduct && dataProduct.length >=1 ?(
+                dataProduct.map((p, index) => (
+                  <div className="flex items-center pb-2 justify-between border-b border-gray-200" key={index}>
+                    <h6 className="font-bold text-slate-800 capitalize">{p.name}</h6>
+                    <CircularProgress 
+                      value={Math.round((p.quantity*100)/(p.current_qtd))} 
+                      size={32}
+                      strokeWidth={4}
+                      textSize="md:text-xs"
+                    />
+                  </div>
+                ))
+              ):(
+                <span>Nenhum dado de uso.</span>
+              )}
             </div>
           </div>
         </div>

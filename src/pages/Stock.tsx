@@ -88,7 +88,9 @@ export function Stock(){
                 productAnalysis ? (
                   Math.round((productAnalysis.totalProductUsed*100)/(productAnalysis.currentProductQtd))
                 ) : 0
-              }/>
+              }
+                textSize="text-3xl"
+              />
               <div className="flex flex-col rounded-md bg-gray-500/10 px-5 py-2 w-full justify-center
               gap-2">
                 <div className="flex flex-col">
