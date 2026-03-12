@@ -1,6 +1,5 @@
 import { MenuIcon, X } from "lucide-react";
 import { useState } from "react";
-import { Navigation } from "./navigation";
 import { NavLink } from "react-router";
 
 interface HeaderProps {
@@ -16,9 +15,8 @@ export function Header({ title, username }: HeaderProps) {
   return (
     <div className="bg-white border-b border-gray-200 relative">
       <div className="flex items-center justify-between px-6 py-6">
-        <div className="flex flex-col md:flex-row md:items-center 
-        justify-between
-        items-start gap-2">
+        <div className="w-full flex flex-col md:flex-row md:items-center 
+        items-start gap-2 md:justify-between md:gap-0">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
             {username && (
@@ -46,9 +44,10 @@ export function Header({ title, username }: HeaderProps) {
           )}
         </button>
       </div>
+      {/*navigation mobile*/}
       {openMenu && (
         <div className="px-6 py-4 w-full bg-white border-y 
-      border-gray-200 absolute">
+      border-gray-200 absolute md:hidden">
           <nav>
             <ul className="flex items-start flex-col md:items-center 
             md:flex-row md:w-full text-right gap-8 text-sm 

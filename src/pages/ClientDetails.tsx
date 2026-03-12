@@ -4,15 +4,18 @@ import { useEffect, useState } from "react";
 import type { ClientWithServices } from "../types/client";
 import { toast } from "sonner";
 import { useNavigate ,useParams } from "react-router";
-import { deleteClient, getClientWithServices } from "../services/clientservice";
+import { deleteClient, getClientById, getClientServices } from "../services/clientservice";
 import { formatDate } from "../utils/dateFormater";
 import { CreateClient } from "../components/forms/createclient";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Modal } from "../components/modal";
 import { coinFormater } from "../utils/coinFormater";
+import { type ClientTask } from "../types/task";
+import { Footer } from "../components/footer";
 
 export function  ClientDetails() {
     const [client, setClient] = useState<ClientWithServices>();
+    const [clientServices, setClientServices] = useState<ClientTask[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
     const {clientId} = useParams();
@@ -21,8 +24,9 @@ export function  ClientDetails() {
     const loadClient = async (id: number) => {
         setIsLoading(true);
         try {
-            const result = await getClientWithServices(id);
-            setClient(result);
+            const [client, services] = await Promise.all([getClientById(id), getClientServices(id)]);
+            setClient(client);
+            setClientServices(services);
         } catch (error) {
             toast.error("Erro ao carregar cliente.", {id:"loadClientError"});
             console.error(error);
@@ -55,14 +59,13 @@ export function  ClientDetails() {
             loadClient(parseInt(clientId));
     }, [clientId]);
 
-    console.log(client);
     return(
         <div className="flex flex-col min-h-screen bg-gray-100">
             <Header title="Relojoaria Digital"/>
             {client && !isLoading ? (
                 <div className="flex flex-col w-[90%] md:w-[600px] gap-4 
                 text-blue-950 rounded-md shadow-md bg-gray-50 mx-auto mt-10 p-5
-                max-h-[500px] overflow-auto">
+                max-h-[500px] overflow-auto mb-10">
                 <div className="flex justify-between items-center gap-2.5">
                     <div className="w-full flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -86,7 +89,7 @@ export function  ClientDetails() {
                 <div className="flex flex-col">
                     <h4 className="text-sm font-bold">Serviços:</h4>
                     <div className="w-full max-h-[200px] overflow-auto">
-                        {client.services && client.services.length >= 1? (
+                        {clientServices && clientServices.length >= 1? (
                             <table className="mt-2 w-full text-sm">
                             <thead>
                                 <tr className="bg-gray-300">
@@ -96,9 +99,11 @@ export function  ClientDetails() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {client.services.map((s, index) => (
+                                {clientServices.map((s, index) => (
                                     <tr className="text-center border-b border-gray-200" key={index}>
-                                        <td className="truncate py-1">{s.id}</td>
+                                        <td className="truncate py-1">
+                                            <span className="p-1 bg-green-200 text-xs">{s.serviceId}</span>
+                                        </td>
                                         <td className="truncate">{s.title}</td>
                                         <td>{coinFormater(s.totalPrice)}</td>
                                     </tr>
@@ -116,7 +121,7 @@ export function  ClientDetails() {
                             <h6 className="text-sm font-bold">Valor em serviços:</h6>
                             <span className="py-1 px-2 rounded-sm bg-green-200 
                             font-bold text-sm">
-                                {coinFormater(client.services.reduce((acc, cur) => acc + cur.totalPrice
+                                {coinFormater(clientServices.reduce((acc, cur) => acc + cur.totalPrice
                             ,0) ?? 0)}
                             </span>
                         </div>
@@ -178,7 +183,7 @@ export function  ClientDetails() {
                     </CreateClient>
                 )}
             </Modal>
-            
+            <Footer/>
         </div>
     )
 }

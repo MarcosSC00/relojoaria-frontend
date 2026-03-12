@@ -17,14 +17,14 @@ export function HeaderSection({ title, children }: HeaderSectionProps) {
         {children}
       </div>
       <div className="flex items-center border border-gray-200 rounded-sm  
-       min-w-0 bg-gray-100">
+       min-w-0 bg-gray-100 w-[150px]">
         <input
           id="search"
           type="text"
           placeholder="pesquisar..."
           className="outline-none text-xs px-1 text-gray-700 w-full"
         />
-        <button className="p-2 bg-[#031D3B] rounded-e-sm">
+        <button className="p-1 bg-[#031D3B] rounded-e-sm">
           <Search size={16} className="text-gray-50" />
         </button>
       </div>

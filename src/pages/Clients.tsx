@@ -56,6 +56,7 @@ export function Clients() {
   const columns: TableColumn<Client>[] = [
     {
       align: "left",
+      cssCustom: "py-1 px-2 rounded-sm bg-green-400/20",
       render: (c) => c.id
     },
     {

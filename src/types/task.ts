@@ -40,7 +40,7 @@ export interface TaskCustom {
 }
 
 export interface ClientTask {
-    id: number;
+    serviceId: number;
     title: string;
     totalPrice: number; 
 }

@@ -253,7 +253,7 @@ export function CreateTask({
               type="number"
               id="servicevalue"
               placeholder="R$ 0.00"
-              className="outline-none border border-gray-200 rounded-sm p-1 text-sm"
+              className="w-full outline-none border border-gray-200 rounded-sm p-1 text-sm"
               {...register("addValue", {
                 setValueAs: (value) =>
                   value ? value : null,
@@ -274,8 +274,9 @@ export function CreateTask({
           </div>
           {isUsed && (
             fields.map((field, index) => (
-              <div key={field.id} className="flex items-center gap-4 col-span-2">
-                <div className="flex flex-col">
+              <div key={field.id} className="flex flex-col items-center md:gap-4
+              md:flex-row col-span-2 gap-2">
+                <div className="flex flex-col w-full">
                   <label htmlFor={`product${index}`} className="font-semibold text-sm">
                     Produto usado:
                   </label>
@@ -294,7 +295,7 @@ export function CreateTask({
                     )}
                   </select>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full">
                   <label htmlFor={`quantity${index}`} className="font-semibold text-sm">
                     Quantidade usada:
                   </label>
@@ -308,7 +309,8 @@ export function CreateTask({
                 </div>
                 <button
                   type="button"
-                  className="p-1 rounded-sm bg-red-500 text-gray-100 mt-[15px]
+                  className="p-1 rounded-sm bg-red-500 text-gray-100 
+                  mt-2 md:mt-[15px]
                   disabled:bg-gray-500"
                   disabled={fields.length <= 1}
                   onClick={() => remove(index)}

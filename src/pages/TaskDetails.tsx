@@ -11,6 +11,7 @@ import { statusConversor } from "../utils/statusConversor";
 import { Modal } from "../components/modal";
 import { CreateTask } from "../components/forms/createtask";
 import * as Dialog from "@radix-ui/react-dialog";
+import { Footer } from "../components/footer";
 
 export function TaskDetails() {
     const [task, setTask] = useState<TaskResponse>();
@@ -61,7 +62,7 @@ export function TaskDetails() {
             {task && !isLoading ? (
                 <div className="flex flex-col w-[90%] md:w-[600px] gap-4 
             text-blue-950 rounded-md shadow-md bg-gray-50 mx-auto mt-10 p-5
-            max-h-[500px] overflow-auto">
+            max-h-[500px] overflow-auto mb-10">
                 <div className="flex items-baseline justify-between md:items-center gap-2.5">
                     <div className="w-full flex items-center justify-between">
                         <h2 className="text-xl font-bold capitalize">
@@ -237,6 +238,7 @@ export function TaskDetails() {
                     </CreateTask>
                 )}
             </Modal>
+            <Footer/>
         </div>
     )
 }

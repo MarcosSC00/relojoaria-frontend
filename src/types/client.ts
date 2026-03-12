@@ -1,5 +1,3 @@
-import type { ClientTask } from "./task";
-
 export interface Client {
   id: number;
   name: string;
@@ -13,5 +11,4 @@ export interface ClientWithServices {
   name: string;
   phone: string;
   createdAt: string;
-  services: ClientTask[];
 }
