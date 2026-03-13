@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Modal } from "./modal";
-import { Pen, Trash2 } from "lucide-react";
+import { ExternalLink, Link2, Pen, Trash2 } from "lucide-react";
 import type { ProductRequest, ProductResponse } from "../types/product";
 import { CreateProduct } from "./forms/createproduct";
 import * as Dialog from "@radix-ui/react-dialog"
@@ -30,7 +30,13 @@ export function ProductCard({id, name, price, unit, onDelete, onReaload, isSubmi
                 {id}
             </h6>
             <h6 className="text-[18px] text-slate-800 font-bold relative text-center">
-                <Link to={`/stock/${name}`}>{name}</Link>
+                <Link to={`/stock/${name}`}>
+                  <div className="flex items-center gap-2 justify-center hover:text-blue-700
+                  transition-all duration-150">
+                    <span className="truncate">{name}</span>
+                    <ExternalLink width={16}/>
+                  </div>
+                </Link>
             </h6>
             <h6 className="text-sm text-slate-800 font-bold text-center
             rounded-md bg-green-400/60 w-[100px] justify-self-center">
