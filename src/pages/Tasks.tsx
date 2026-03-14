@@ -90,8 +90,7 @@ export function Tasks(){
       cssCustom: "py-1 px-2 rounded-sm bg-green-400/20"
     },
     { 
-      render: (t) => t.title, 
-      align:"left",
+      render: (t) => t.title
     },
     { render: (t) => t.clientName},
     { render: (t) => formatDate(t.createdAt)},

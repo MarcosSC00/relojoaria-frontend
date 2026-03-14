@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Modal } from "./modal";
-import { ExternalLink, Link2, Pen, Trash2 } from "lucide-react";
+import { ExternalLink, Pen, Trash2 } from "lucide-react";
 import type { ProductRequest, ProductResponse } from "../types/product";
 import { CreateProduct } from "./forms/createproduct";
 import * as Dialog from "@radix-ui/react-dialog"

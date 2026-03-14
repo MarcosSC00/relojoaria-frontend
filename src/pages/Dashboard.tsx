@@ -54,9 +54,9 @@ export function Dashboard() {
       {loading ? (
         <Loading />
       ):(
-        <div className="px-6 py-8 space-y-8 min-h-screen">
+        <div className="px-6 py-8 space-y-8 min-h-screen w-full max-w-[1440px] xl:justify-self-center">
         {/* Key Performance Indicators */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[auto_auto_auto_auto] gap-6">
           {/* Total Revenue */}
           <Card className="bg-linear-to-r from-blue-500 to-blue-600 text-white">
             <div className="flex items-center justify-between">

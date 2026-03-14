@@ -98,11 +98,11 @@ export function Table({data, onDelete, children,
       </tbody>
       <tfoot>
         <tr>
-          <td colSpan={headElements.length - 2} className="text-gray-400 py-2">
+          <td colSpan={window.innerWidth >= 768 ? headElements.length - 1: headElements.length - 2} className="text-gray-400 py-2">
             <span className="ml-3">página {page} de {totalPages}</span>
           </td>
-          <td colSpan={2} className="text-gray-400">
-            <div className="text-right">
+          <td colSpan={window.innerWidth >= 768 ? 1:2} className="text-gray-400">
+            <div className="text-right md:text-center">
               <button 
                 className="hover:text-gray-600" 
                 onClick={goToFirstPage}

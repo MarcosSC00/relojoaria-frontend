@@ -4,6 +4,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import type { Client, ClientWithServices } from "../../types/client";
 import { createClient, updateClient } from "../../services/clientservice";
+import { phoneMask } from "../../utils/phoneMask";
 
 interface CreateClientInupts {
   id?: number
@@ -34,15 +35,8 @@ export function CreateClient({
     reset,
     formState: { errors },
   } = useForm<CreateClientInupts>();
-
-  useEffect(() => {
-    reset({
-      name: loadedClient?.name,
-      phone: loadedClient?.phone
-    })
-  }, [loadedClient, reset])
   const [error, setError] = useState<string | null>(null);
-
+  
   const onSubmit: SubmitHandler<CreateClientInupts> = async ({name, phone}: CreateClientInupts) => {
     var result;
     try {
@@ -73,6 +67,13 @@ export function CreateClient({
       onLoading?.(false);
     }
   };
+
+  useEffect(() => {
+    reset({
+      name: loadedClient?.name,
+      phone: loadedClient?.phone
+    })
+  }, [loadedClient, reset])
   return (
     <div>
       <form
@@ -99,13 +100,17 @@ export function CreateClient({
         <input
           type="text"
           id="phone"
+          placeholder="(00) 00000-0000"
           className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
           {...register("phone", {
             required: "Informe o telefone/celular",
             pattern: {
-              value: /^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$/,
+              value: /^\([1-9]{2}\)\s(?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$/,
               message: "Telefone inválido",
             },
+            onChange: (e) => {
+              e.target.value = phoneMask(e.target.value);
+            }
           })}
         />
         {errors.phone && (

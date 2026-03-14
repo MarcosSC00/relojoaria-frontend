@@ -26,7 +26,10 @@ export function  ClientDetails() {
         try {
             const [client, services] = await Promise.all([getClientById(id), getClientServices(id)]);
             setClient(client);
-            setClientServices(services);
+            const validServices = (services ?? []).filter(
+                (s) => s && (s.serviceId !== null || s.title !== null || s.totalPrice !== null)
+            );
+            setClientServices(validServices);
         } catch (error) {
             toast.error("Erro ao carregar cliente.", {id:"loadClientError"});
             console.error(error);
@@ -58,6 +61,7 @@ export function  ClientDetails() {
         if(clientId)
             loadClient(parseInt(clientId));
     }, [clientId]);
+    console.log(clientServices);
 
     return(
         <div className="flex flex-col min-h-screen bg-gray-100">
