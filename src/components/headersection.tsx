@@ -4,9 +4,10 @@ import type { ReactNode } from "react";
 interface HeaderSectionProps {
   title: string;
   children: ReactNode;
+  handleFilter?: (name: string) => void;
 }
 
-export function HeaderSection({ title, children }: HeaderSectionProps) {
+export function HeaderSection({ title, children, handleFilter }: HeaderSectionProps) {
   return (
     <div
       className="w-full flex p-2 border border-gray-200 justify-between rounded-md
@@ -23,10 +24,11 @@ export function HeaderSection({ title, children }: HeaderSectionProps) {
           type="text"
           placeholder="pesquisar..."
           className="outline-none text-xs px-1 text-gray-700 w-full"
+          onChange={handleFilter && ((e) => handleFilter(e.target.value))}
         />
-        <button className="p-1 bg-[#031D3B] rounded-e-sm">
+        <div className="p-1 bg-[#031D3B] rounded-e-sm">
           <Search size={16} className="text-gray-50" />
-        </button>
+        </div>
       </div>
     </div>
   );

@@ -15,6 +15,7 @@ export function Product() {
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
   const [isLoading, setIsLoding] = useState(false);
   const [products, setProducts] = useState<ProductResponse[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<ProductResponse[]>([]);
   const [dataProduct, setDataProduct] = useState<ProductData[]>([]);
 
   const loadProducts = async () => {
@@ -23,6 +24,7 @@ export function Product() {
       const result = await getProducts();
       const dataChart = await getProductData();
       setProducts(result);
+      setFilteredProducts(result);
       setDataProduct(dataChart)
     } catch (error) {
       toast.error("Erro ao carregar produtos.");
@@ -42,6 +44,16 @@ export function Product() {
       toast.error("Erro ao deletar produto.");
     }
   }
+
+  const handleFilter = (name: string) => {
+    if(!name) {
+      setFilteredProducts(products);
+      return;
+    }
+    const result = products.filter(p => p.name.toLowerCase().includes(name.toLowerCase()));
+    setFilteredProducts(result);
+  }
+
   useEffect(() => {
    loadProducts(); 
   }, []);
@@ -50,6 +62,7 @@ export function Product() {
     <PageWrapper
       headerTitle="Relojoaria Digital"
       sessionTitle="Produtos"
+      handleFilter={handleFilter}
       componentsChildren={
         <div className="w-full max-h-screen px-6 pb-2 grid 
         grid-cols-1 md:grid-cols-3 gap-2">
@@ -71,7 +84,7 @@ export function Product() {
                 <Loading/>
               </div>
             ):(
-              products.map((p) => (
+              filteredProducts.map((p) => (
               <ProductCard 
                 id={p.id}
                 name={p.name}

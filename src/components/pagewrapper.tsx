@@ -9,6 +9,7 @@ interface PageWrapperProps {
   sessionTitle: string;
   children: ReactNode;
   componentsChildren: ReactNode;
+  handleFilter?: (name: string) => void;
 }
 
 export function PageWrapper({
@@ -16,6 +17,7 @@ export function PageWrapper({
   sessionTitle,
   componentsChildren,
   children,
+  handleFilter
 }: PageWrapperProps) {
   return (
     <div className="min-h-screen flex flex-col">
@@ -23,7 +25,7 @@ export function PageWrapper({
         <Header title={headerTitle} />
         <Navigation />
         <div className="max-w-[1440px] w-full px-6 py-8 space-y-8 mx-auto">
-          <HeaderSection title={sessionTitle}>{children}</HeaderSection>
+          <HeaderSection title={sessionTitle} handleFilter={handleFilter && ((e) => handleFilter(e))}>{children}</HeaderSection>
         </div>
         <div className="max-w-[1440px] w-full mx-auto">
           {componentsChildren}

@@ -14,7 +14,8 @@ import { statusConversor,revertStatusConversor } from "../utils/statusConversor"
 import { Loading } from "../components/loading";
 
 export function Tasks(){
-  const [tasks, setTasks] = useState<TaskResponse[]>([])
+  const [tasks, setTasks] = useState<TaskResponse[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<TaskResponse[]>([]);
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -25,7 +26,8 @@ export function Tasks(){
     try{
       setIsLoading(true);
       const response = await getAllTasks();
-      setTasks(response)
+      setTasks(response);
+      setFilteredTasks(response);
     }catch(error){
       console.error(error)
       toast.error("Erro ao buscar clientes.")
@@ -112,6 +114,15 @@ export function Tasks(){
     },
   ]
 
+  const handleFilter = (title: string) => {
+    if(!title) {
+      setFilteredTasks(tasks);
+      return;
+    }
+    const result = tasks.filter(t => t.title.toLowerCase().includes(title.toLowerCase()));
+    setFilteredTasks(result);
+  }
+
   useEffect(() => {
     loadTasks();
   }, [])
@@ -119,6 +130,7 @@ export function Tasks(){
     <PageWrapper
       headerTitle="Relojoaria Digital"
       sessionTitle="Serviços"
+      handleFilter={handleFilter}
       componentsChildren={
         <div className="w-full max-h-screen px-6 py-8">
           {isLoading ? (
@@ -128,7 +140,7 @@ export function Tasks(){
           ):(
             <div className="overflow-auto">
               <Table 
-                data={tasks ?? []} 
+                data={filteredTasks ?? []} 
                 onDelete={handleDeleteTask} 
                 onReaload={loadTasks}
                 onEdit={handleEdit}

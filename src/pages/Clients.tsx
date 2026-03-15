@@ -17,13 +17,15 @@ export function Clients() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isloading, setIsLoading] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
+  const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [selectedEntity, setSelectedEntity] = useState<any | null>(null);
 
   const loadClients = async () => {
     try{
       setIsLoading(true);
       const response = await getClients();
-      setClients(response)
+      setClients(response);
+      setFilteredClients(response)
     }catch(error){
       console.error(error)
       toast.error("Erro ao buscar clientes.")
@@ -52,6 +54,15 @@ export function Clients() {
     setSelectedEntity(entity);
     setIsEditOpen(true);
   }
+  
+  const handleFilter = (name: string) => {
+    if(!name) {
+      setFilteredClients(clients);
+      return;
+    }
+    const result = clients.filter(c => c.name.toLowerCase().includes(name.toLowerCase()));
+    setFilteredClients(result);
+  }
 
   const columns: TableColumn<Client>[] = [
     {
@@ -78,6 +89,7 @@ export function Clients() {
     <PageWrapper
       headerTitle="Relojoaria Digital"
       sessionTitle="Clientes"
+      handleFilter={handleFilter}
       componentsChildren={
         <div className="w-full px-6 py-8">
           {isloading ? (
@@ -87,7 +99,7 @@ export function Clients() {
           ):(
             <div className="overflow-auto">
               <Table 
-                data={clients ?? []} 
+                data={filteredClients ?? []} 
                 onDelete={handleDeleteClient} 
                 onReaload={loadClients}
                 onEdit={handleEdit}

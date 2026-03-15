@@ -61,7 +61,6 @@ export function  ClientDetails() {
         if(clientId)
             loadClient(parseInt(clientId));
     }, [clientId]);
-    console.log(clientServices);
 
     return(
         <div className="flex flex-col min-h-screen bg-gray-100">

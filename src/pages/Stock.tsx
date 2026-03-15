@@ -44,7 +44,6 @@ export function Stock(){
       loadStock(productName);
   }, []);
 
-  console.log(tasks);
   return(
     <PageWrapper
       headerTitle="Relojoaria Digital"
