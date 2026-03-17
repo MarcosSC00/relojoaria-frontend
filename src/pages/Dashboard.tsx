@@ -34,7 +34,11 @@ export function Dashboard() {
   }
 
   const totalValue = tasks.reduce((acc, cur) => acc + cur.totalPrice,0);
-  const completedTaskPercent = ((tasks.filter(t => t.status === 'DONE').length)*100)/(tasks.length);
+  let completedTaskPercent = 0;
+  if(tasks && tasks.length >= 1){
+    completedTaskPercent = ((tasks.filter(t => t.status === 'DONE').length)*100)/(tasks.length);
+  }else completedTaskPercent = 0;
+
   const completedTasks = tasks.filter(t => t.status === 'DONE').length;
   const activeTasks = tasks.filter(t => t.status !== 'DONE').length;
 
@@ -145,7 +149,7 @@ export function Dashboard() {
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Valor Médio</span>
                   <span className="text-sm font-medium text-gray-700">
-                    {coinFormater(totalValue/tasks.length)}
+                    {coinFormater(tasks && tasks.length >= 1 ? (totalValue/tasks.length) : 0 )}
                   </span>
                 </div>
               </div>

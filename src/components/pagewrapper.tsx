@@ -20,8 +20,8 @@ export function PageWrapper({
   handleFilter
 }: PageWrapperProps) {
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex-1 min-h-screen">
+    <div className="min-h-screen flex flex-col justify-between">
+      <div className="md:flex-1 md:min-h-screen">
         <Header title={headerTitle} />
         <Navigation />
         <div className="max-w-[1440px] w-full px-6 py-8 space-y-8 mx-auto">

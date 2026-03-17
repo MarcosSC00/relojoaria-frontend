@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import type { TableColumn } from "../types/tablecolumn";
 import { formatDate } from "../utils/dateFormater";
 import { Loading } from "../components/loading";
+import { Plus } from "lucide-react";
 
 export function Clients() {
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
@@ -83,7 +84,7 @@ export function Clients() {
 
   useEffect(() => {
     loadClients();
-  }, [])
+  }, []);
 
   return (
     <PageWrapper
@@ -96,7 +97,8 @@ export function Clients() {
             <div className="w-full flex justify-center">
               <Loading/>
             </div>
-          ):(
+          ): clients && clients.length >= 1 ? (
+            
             <div className="overflow-auto">
               <Table 
                 data={filteredClients ?? []} 
@@ -141,6 +143,15 @@ export function Clients() {
                 </Modal>
               </Table>
             </div>
+          ) : (
+            <button 
+              className="flex px-5 py-1 font-bold rounded-md bg-[#031D3B] text-gray-200
+              justify-self-center hover:scale-95 transition-all duration-100 shadow-md gap-2"
+              onClick={() => {setIsCreateOpen(true), setIsEditOpen(false)}}
+            >
+              Criar Cliente
+              <Plus/>
+            </button>
           )}
         </div>
       }

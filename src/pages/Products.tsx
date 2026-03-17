@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { deleteProduct, getProductData, getProducts } from "../services/productservice";
 import { Loading } from "../components/loading";
 import { CircularProgress } from "../components/circularprogress";
+import { Plus } from "lucide-react";
 
 export function Product() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -64,7 +65,8 @@ export function Product() {
       sessionTitle="Produtos"
       handleFilter={handleFilter}
       componentsChildren={
-        <div className="w-full max-h-screen px-6 pb-2 grid 
+        products && products.length >=1 ? (
+          <div className="w-full max-h-screen px-6 pb-2 grid 
         grid-cols-1 md:grid-cols-3 gap-2">
           <div className="md:col-span-2 rounded-md shadow-sm 
           bg-white border border-gray-100 p-2">
@@ -115,11 +117,22 @@ export function Product() {
                   </div>
                 ))
               ):(
-                <span>Nenhum dado de uso.</span>
+                <span className="flex justify-center text-xs text-red-500">Nenhum dado de uso.</span>
               )}
             </div>
           </div>
         </div>
+        ):(
+          <button 
+              className="flex px-5 py-1 font-bold rounded-md bg-[#031D3B] text-gray-200
+              justify-self-center hover:scale-95 transition-all duration-100 shadow-md gap-2
+              mt-8"
+              onClick={() => setIsOpen(true)}
+            >
+              Criar Produto
+              <Plus/>
+            </button>
+        )
       }
     >
       <Modal tiltle="Cadastro de Produto" open={isOpen} setOpen={setIsOpen}>

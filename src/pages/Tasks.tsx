@@ -12,6 +12,7 @@ import { formatDate } from "../utils/dateFormater";
 import { coinFormater } from "../utils/coinFormater";
 import { statusConversor,revertStatusConversor } from "../utils/statusConversor";
 import { Loading } from "../components/loading";
+import { Plus } from "lucide-react";
 
 export function Tasks(){
   const [tasks, setTasks] = useState<TaskResponse[]>([]);
@@ -137,7 +138,7 @@ export function Tasks(){
             <div className="w-full flex justify-center">
               <Loading/>
             </div>
-          ):(
+          ): tasks && tasks.length >= 1 ? (
             <div className="overflow-auto">
               <Table 
                 data={filteredTasks ?? []} 
@@ -182,6 +183,15 @@ export function Tasks(){
               </Modal>
             </Table>
             </div>
+          ) : (
+            <button 
+              className="flex px-5 py-1 font-bold rounded-md bg-[#031D3B] text-gray-200
+              justify-self-center hover:scale-95 transition-all duration-100 shadow-md gap-2"
+              onClick={() => {setIsCreateOpen(true), setIsEditOpen(false)}}
+            >
+              Criar Serviço
+              <Plus/>
+            </button>
           )}
         </div>
       }
