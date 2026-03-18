@@ -75,8 +75,8 @@ export function StockProduct({
                         <div key={t.id} className="grid grid-cols-[auto_1fr_1fr_1fr] text-center px-4 py-1 border-b border-gray-200">
                             <h6 className="text-xs font-normal px-2 bg-green-600/40 rounded-md">{t.id}</h6>
                             <h6 className="max-w-[100px] ml-10 text-left text-sm font-normal truncate">{t.title}</h6>
-                            <h6 className="text-sm font-semibold">{t.qtd_product_used}</h6>
-                            <h6 className="text-sm font-semibold text-end text-blue-600">{coinFormater(t.total_product_price)}</h6>
+                            <h6 className="text-sm font-semibold">{t.qtdProductUsed}</h6>
+                            <h6 className="text-sm font-semibold text-end text-blue-600">{coinFormater(t.totalProductPrice)}</h6>
                         </div>
                     )): <h4>Nenhuma tarefa relacionada.</h4>}
                 </div>

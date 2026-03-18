@@ -35,8 +35,8 @@ export async function removeSubTask(idTask: number, idSubTask: number): Promise<
     await api.post(`api/service-order/${idTask}/remove-subservice/${idSubTask}`);
 }
 
-export async function getSubTasks(idTask: number): Promise<SubTaskResponse[]>{
-    const result = await api.post(`api/service-order/${idTask}/subservices`);
+export async function getSubTasks(taskId: number): Promise<SubTaskResponse[]>{
+    const result = await api.get(`api/service-order/${taskId}/sub-services`);
     return result.data;
 }
 

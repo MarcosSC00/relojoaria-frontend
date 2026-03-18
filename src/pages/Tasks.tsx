@@ -75,6 +75,7 @@ export function Tasks(){
         task.id === id ? { ...task, status } : task
       ));
       toast.success("Status atualizado com sucesso.");
+      loadTasks();
     }catch(error){
       console.error("Erro ao atualizar status");
       toast.error("Erro ao atualizar status.");
@@ -151,7 +152,7 @@ export function Tasks(){
                 <Modal
                   open={isEditOpen}
                   setOpen={setIsEditOpen}
-                  tiltle="Editar Cliente"
+                  tiltle="Editar Serviço"
                   trigger={<></>}
                 >
                   {isEditOpen && selectedEntity && ( 

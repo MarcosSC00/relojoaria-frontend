@@ -47,7 +47,7 @@ export function Header({ title, username }: HeaderProps) {
       {/*navigation mobile*/}
       {openMenu && (
         <div className="px-6 py-4 w-full bg-white border-y 
-      border-gray-200 absolute md:hidden">
+      border-gray-200 absolute md:hidden z-20">
           <nav>
             <ul className="flex items-start flex-col md:items-center 
             md:flex-row md:w-full text-right gap-8 text-sm 

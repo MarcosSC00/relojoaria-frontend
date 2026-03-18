@@ -101,9 +101,10 @@ export function Product() {
             )}
             </div>
           </div>
-          <div className="flex flex-col items-center md:col-span-1 rounded-md shadow-sm bg-white border-gray-100">
+          <div className="flex flex-col items-center md:col-span-1 rounded-md shadow-sm 
+          bg-white border-gray-100 mt-5 md:mt-0">
             <h4 className="text-md font-bold my-2 text-blue-950">Consumo</h4>
-            <div className="flex flex-col w-full h-[180px] md:h-full overflow-auto p-4 gap-5">
+            <div className="flex flex-col w-full md:h-full overflow-auto p-4 gap-5">
               {dataProduct && dataProduct.length >=1 ?(
                 dataProduct.map((p, index) => (
                   <div className="flex items-center pb-2 justify-between border-b border-gray-200" key={index}>

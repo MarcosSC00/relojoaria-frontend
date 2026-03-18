@@ -65,7 +65,7 @@ export function CreateSubTask({control, register, errors}: CreateSubTaskProps){
                   id="subTaskValue"
                   placeholder="R$ 0.00"
                   className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
-                  {...register(`subServices.${index}.price`)}
+                  {...register(`subServices.${index}.price`, {required:"informe o valor"})}
                 />
                 {errors.subServices?.[index]?.price && (
                   <span className="text-xs text-red-500">{errors.subServices?.[index]?.price.message}</span>

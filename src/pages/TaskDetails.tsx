@@ -56,6 +56,7 @@ export function TaskDetails() {
         if(taskId)
             loadTask(parseInt(taskId));
     },[taskId]);
+
     return(
         <div className="flex flex-col min-h-screen bg-gray-100">
             <Header title="Relojoaria Digital"/>

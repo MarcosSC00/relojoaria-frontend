@@ -34,9 +34,9 @@ export interface TaskResponse {
 export interface TaskCustom {
     id: number;
     title: string;
-    qtd_product_used: number;
-    total_product_price: number;
-    amount_service: number;
+    qtdProductUsed: number;
+    totalProductPrice: number;
+    amountService: number;
 }
 
 export interface ClientTask {
