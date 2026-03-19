@@ -4,6 +4,7 @@ import { type ProductRequest } from "../../types/product";
 import { createProduct, updateProduct } from "../../services/productservice";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { coinMask } from "../../utils/masksFormater";
 
 interface CreateProductProps {
   children: ReactNode;
@@ -86,12 +87,12 @@ export function CreateProduct({
         <select
           id="unid"
           {...register("unit")}
-          className="outline-none border border-gray-200 rounded-sm text-sm
-          text-gray-700"
+          className="outline-none border border-gray-200 rounded-sm 
+          text-sm text-gray-700"
         >
-          <option value="GRAMA">GRAMA</option>
-          <option value="UNIDADE">UNIDADE</option>
-          <option value="CENTIMETROS">CENTIMETROS</option>
+          <option value="GRAMA" className="text-xs md:text-md">GRAMA</option>
+          <option value="UNIDADE" className="text-xs md:text-md">UNIDADE</option>
+          <option value="CENTIMETROS" className="text-xs md:text-md">CENTIMETROS</option>
         </select>
         {errors.unit && (
           <span className="text-xs text-red-500">{errors.unit.message}</span>
@@ -100,10 +101,16 @@ export function CreateProduct({
           Preço (por unidade de medida):
         </label>
         <input
-          type="number"
+          type="text"
           id="price"
           className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
-          {...register("price", { required: "Informe o preço" })}
+          {...register("price", 
+            { required: "Informe o preço",
+              onChange: (e) => {
+                e.target.value = coinMask(e.target.value);
+              }
+            }
+          )}
           placeholder="Informe o preço do produto"
         />
         {children}

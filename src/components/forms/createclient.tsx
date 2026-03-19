@@ -4,7 +4,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import type { Client, ClientWithServices } from "../../types/client";
 import { createClient, updateClient } from "../../services/clientservice";
-import { phoneMask } from "../../utils/phoneMask";
+import { phoneMask } from "../../utils/masksFormater";
 
 interface CreateClientInupts {
   id?: number

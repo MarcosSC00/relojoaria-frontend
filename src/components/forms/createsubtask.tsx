@@ -1,6 +1,7 @@
 import { useFieldArray, type Control, type UseFormRegister, type FieldErrors } from "react-hook-form";
 import { Minus, Plus } from "lucide-react";
 import type { TaskRequest } from "../../types/task";
+import { coinMask } from "../../utils/masksFormater";
 
 interface CreateSubTaskProps{
     control: Control<TaskRequest>,
@@ -61,11 +62,17 @@ export function CreateSubTask({control, register, errors}: CreateSubTaskProps){
                   Valor da subtarefa:
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   id="subTaskValue"
                   placeholder="R$ 0.00"
                   className="outline-none border border-gray-200 rounded-sm p-2 text-sm"
-                  {...register(`subServices.${index}.price`, {required:"informe o valor"})}
+                  {...register(`subServices.${index}.price`, 
+                    {
+                      required:"informe o valor",
+                      onChange: (e) => {
+                        e.target.value = coinMask(e.target.value);
+                      }
+                    })}
                 />
                 {errors.subServices?.[index]?.price && (
                   <span className="text-xs text-red-500">{errors.subServices?.[index]?.price.message}</span>

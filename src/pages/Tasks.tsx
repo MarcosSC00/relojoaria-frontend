@@ -59,8 +59,8 @@ export function Tasks(){
 
     try {
       await deleteTask(id);
-      setTasks((prev) => prev.filter(p => p.id !== id));
       toast.success("Serviço deletado com sucesso!");
+      loadTasks();
     } catch (error) {
       console.error(error);
       toast.error("Erro ao deletar serviço.");

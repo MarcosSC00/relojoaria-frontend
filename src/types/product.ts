@@ -1,7 +1,7 @@
 export interface ProductRequest {
   name: string;
   unit: string;
-  price: number;
+  price: string;
 }
 
 export interface ProductResponse {

@@ -91,28 +91,30 @@ export function  ClientDetails() {
                 </div>
                 <div className="flex flex-col">
                     <h4 className="text-sm font-bold">Serviços:</h4>
-                    <div className="w-full max-h-[200px] overflow-auto">
+                    <div>
                         {clientServices && clientServices.length >= 1? (
-                            <table className="mt-2 w-full text-sm">
-                            <thead>
-                                <tr className="bg-gray-300">
-                                    <th>Id</th>
-                                    <th>Título</th>
-                                    <th>Valor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {clientServices.map((s, index) => (
-                                    <tr className="text-center border-b border-gray-200" key={index}>
-                                        <td className="truncate py-1">
-                                            <span className="p-1 bg-green-200 text-xs">{s.serviceId}</span>
-                                        </td>
-                                        <td className="truncate">{s.title}</td>
-                                        <td>{coinFormater(s.totalPrice)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                            <div className="w-full max-h-[200px] overflow-auto">
+                                <table className="mt-2 w-full text-sm">
+                                    <thead>
+                                        <tr className="bg-gray-300">
+                                            <th>Id</th>
+                                            <th>Título</th>
+                                            <th>Valor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {clientServices.map((s, index) => (
+                                            <tr className="text-center border-b border-gray-200" key={index}>
+                                                <td className="truncate py-1">
+                                                    <span className="p-1 bg-green-200 text-xs">{s.serviceId}</span>
+                                                </td>
+                                                <td className="truncate font-semibold">{s.title}</td>
+                                                <td className="text-blue-500 font-semibold">{coinFormater(s.totalPrice)}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         ) : (
                             <span className="text-xs text-red-500">
                                 Não possui serviços.

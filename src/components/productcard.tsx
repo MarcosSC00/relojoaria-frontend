@@ -5,6 +5,7 @@ import type { ProductRequest, ProductResponse } from "../types/product";
 import { CreateProduct } from "./forms/createproduct";
 import * as Dialog from "@radix-ui/react-dialog"
 import { Link } from "react-router";
+import { coinFormater } from "../utils/coinFormater";
 
 interface ProductCardProps extends ProductResponse{
     onDelete: (name: string) => Promise<void>
@@ -40,7 +41,7 @@ export function ProductCard({id, name, price, unit, onDelete, onReaload, isSubmi
             </h6>
             <h6 className="text-sm text-slate-800 font-bold text-center
             rounded-md bg-green-400/60 w-[100px] justify-self-center">
-                {`R$ ${price}`}
+                {`R$ ${coinFormater(price)}`}
             </h6>
             <h6 className="text-gray-400 font-semibold text-center px-4 lowercase">{unit}</h6>
             <div className="flex gap-2 justify-end">

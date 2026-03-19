@@ -7,6 +7,7 @@ import { AlertCircle, CheckCircle, Minus, Plus } from "lucide-react";
 import { getJustNameProducts } from "../../services/productservice";
 import { getAllClientNames } from "../../services/clientservice";
 import { CreateSubTask } from "./createsubtask";
+import { coinMask } from "../../utils/masksFormater";
 
 interface CreateServiceProps {
   children: ReactNode;
@@ -234,14 +235,18 @@ export function CreateTask({
               Valor adicional:
             </label>
             <input
-              type="number"
+              type="text"
               id="addvalue"
               placeholder="R$ 0.00"
               className="outline-none w-full border border-gray-200 rounded-sm p-1 text-sm"
               {...register("addValue", {
                 setValueAs: (value) =>
                   value ? value : null,
-              })}
+                onChange: (e) => {
+                  e.target.value = coinMask(e.target.value);
+                }
+              })
+              }
             />
           </div>
           ) : (
@@ -250,14 +255,17 @@ export function CreateTask({
               Valor do serviço:
             </label>
             <input
-              type="number"
+              type="text"
               id="servicevalue"
               placeholder="R$ 0.00"
               className="w-full outline-none border border-gray-200 rounded-sm p-1 text-sm"
               {...register("addValue", {
                 setValueAs: (value) =>
                   value ? value : null,
-                required: "Informe o valor"
+                required: "Informe o valor",
+                onChange: (e) => {
+                  e.target.value = coinMask(e.target.value);
+                }
               })}
             />
           </div>
