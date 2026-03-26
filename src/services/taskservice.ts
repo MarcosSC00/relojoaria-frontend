@@ -1,6 +1,6 @@
 import { api } from "../api/api";
 import type { SubTaskRequest, SubTaskResponse } from "../types/subtask";
-import type { TaskCustom, TaskRequest, TaskResponse } from "../types/task";
+import type { MonthlyTask, TaskCustom, TaskRequest, TaskResponse } from "../types/task";
 
 export async function createTask(data: TaskRequest): Promise<TaskResponse>{
     const response = await api.post("api/service-order", data);
@@ -46,4 +46,11 @@ export async function getCustomTasks(productName: string): Promise<TaskCustom[]>
 }
 export async function updateStatus(id: number, status: string): Promise<void> {
     await api.put(`api/service-order/${id}/update-status`, {status});
+}
+
+export async function getMonthlyStats(year: number) {
+  const response = await api.get<MonthlyTask[]>(
+    `api/service-order/stats/monthly?year=${year}`
+  );
+  return response.data;
 }

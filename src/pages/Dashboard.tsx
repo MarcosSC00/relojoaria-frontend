@@ -5,26 +5,51 @@ import { Header } from "../components/header";
 import { Navigation } from "../components/navigation";
 import { Footer } from "../components/footer";
 import { coinFormater } from "../utils/coinFormater";
-import type { TaskResponse } from "../types/task";
+import { type MonthlyTask, type TaskResponse } from "../types/task";
 import { useEffect, useState } from "react";
 import { type Client } from "../types/client";
 import { toast } from "sonner";
 import { getClients } from "../services/clientservice";
-import { getAllTasks } from "../services/taskservice";
+import { getAllTasks, getMonthlyStats } from "../services/taskservice";
 import { Loading } from "../components/loading";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer
+} from "recharts";
 
 export function Dashboard() {
   const { userAuth } = useAuth();
   const [tasks, setTasks] = useState<TaskResponse[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [monthlyStats, setMonthlyStats] = useState<any[]>([]);
+  const monthNames = [
+    "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+    "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+  ];
+
+  const formatData = (data: MonthlyTask[]) => {
+    return data.map(item => ({
+      name: monthNames[item.month - 1],
+      total: item.total
+    }));
+  };
 
   const loadData = async () => {
     setLoading(true);
     try {
-      const [clients, tasks] = await Promise.all([getClients(), getAllTasks()]);
+      const [clients, tasks, monthlyStats] = await Promise.all([
+        getClients(), 
+        getAllTasks(),
+        getMonthlyStats(2026),
+      ]);
       setClients(clients);
       setTasks(tasks);
+      setMonthlyStats(formatData(monthlyStats));
     } catch (error) {
       console.error(error);
       toast.error("Erro ao carregar dados",{id:"toastDashboardError"});
@@ -154,6 +179,17 @@ export function Dashboard() {
                 </div>
               </div>
             </div>
+          </Card>
+          {/* Task Chart*/}
+          <Card title="Faturamento mensal">
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={monthlyStats} >
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="total" barSize={20} fill="#2f3d91" isAnimationActive={true}/>
+                </BarChart>
+              </ResponsiveContainer>
           </Card>
         </div>
       </div>

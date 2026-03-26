@@ -44,3 +44,8 @@ export interface ClientTask {
     title: string;
     totalPrice: number; 
 }
+
+export type MonthlyTask = {
+  month: number;
+  total: number;
+};
