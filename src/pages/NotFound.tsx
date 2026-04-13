@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/AuthProvider";
 
 export function NotFound() {
   const { userAuth } = useAuth();

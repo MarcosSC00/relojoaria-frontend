@@ -1,6 +1,6 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { LoginService } from "../services/loginservice";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 interface LoginSchema {

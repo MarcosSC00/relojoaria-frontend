@@ -1,6 +1,6 @@
 import { Award, DollarSign, Target, Users } from "lucide-react";
 import { Card } from "../components/ui/Card";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/AuthProvider";
 import { Header } from "../components/header";
 import { Navigation } from "../components/navigation";
 import { Footer } from "../components/footer";
