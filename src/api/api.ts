@@ -2,10 +2,10 @@ import axios from "axios";
 
 export const api = axios.create({
   baseURL: "https://relojoaria-backend.onrender.com",
-  timeout: 10000,
+  timeout: 15000,
 });
 
 export const publicApi = axios.create({
   baseURL: "https://relojoaria-backend.onrender.com",
-  timeout: 10000,
+  timeout: 15000,
 });
